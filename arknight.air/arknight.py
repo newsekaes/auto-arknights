@@ -13,7 +13,7 @@ from airtest.core.api import *
 # 识别图片的阈值
 ST.THRESHOLD = 0.95
 # exists判断的超时时间
-ST.FIND_TIMEOUT_TMP = 3
+ST.FIND_TIMEOUT_TMP = 1
 
 import random
 
@@ -27,7 +27,7 @@ series = [
         'chapters': [
             {
                 'name': '1',
-                'template': Template(r"./img/chapters/chapter1.png", record_pos=(0.059, -0.127), resolution=(2340, 1080)),
+                'template': Template(r"./img/chapters/chapter1.png", record_pos=(-0.257, 0.007), resolution=(2340, 1080)),
                 'missions': [
                     {
                         'name': '1-7',
@@ -37,7 +37,7 @@ series = [
             },
             {
                 'name': '2',
-                'template': Template(r"./img/chapters/chapter2.png", record_pos=(0.027, -0.131), resolution=(2340, 1080)),
+                'template': Template(r"./img/chapters/chapter2.png", record_pos=(0.287, 0.029), resolution=(2340, 1080)),
                 'missions': [
                     {
                         'name': '2-5',
@@ -51,29 +51,29 @@ series = [
             },
             {
                 'name': '3',
-                'template': Template(r"./img/chapters/chapter3.png", record_pos=(0.339, -0.131), resolution=(2340, 1080)),
+                'template': Template(r"./img/chapters/chapter3.png", record_pos=(0.044, 0.003), resolution=(2340, 1080)),
                 'missions': [
                     {
                         'name': '3-1',
-                        'template': Template(r"./img/missions/3-1.png", record_pos=(-0.182, -0.013), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/3-1.png", record_pos=(-0.081, -0.009), resolution=(2340, 1080))
                     },
                     {
                         'name': '3-2',
-                        'template': Template(r"./img/missions/3-2.png", record_pos=(0.009, -0.016), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/3-2.png", record_pos=(-0.379, -0.015), resolution=(2340, 1080))
                     },
                     {
                         'name': '3-3',
-                        'template': Template(r"./img/missions/3-3.png", record_pos=(-0.258, -0.02), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/3-3.png", record_pos=(-0.2, -0.018), resolution=(2340, 1080))
                     },
                     {
                         'name': '3-4',
-                        'template': Template(r"./img/missions/3-4.png", record_pos=(0.073, 0.036), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/3-4.png", record_pos=(0.036, 0.038), resolution=(2340, 1080))
                     },
                 ]
             },
             {
                 'name': '4',
-                'template': Template(r"./img/chapters/chapter4.png", record_pos=(-0.308, -0.129), resolution=(2340, 1080)),
+                'template': Template(r"./img/chapters/chapter4.png", record_pos=(-0.314, 0.031), resolution=(2340, 1080)),
                 'missions': [
                     {
                         'name': '4-2',
@@ -110,7 +110,7 @@ series = [
             },
             {
                 'name': '5',
-                'template': Template(r"./img/chapters/chapter5.png", record_pos=(-0.345, -0.129), resolution=(2340, 1080)),
+                'template': Template(r"./img/chapters/chapter5.png", record_pos=(-0.002, 0.018), resolution=(2340, 1080)),
                 'missions': [
                     {
                         'name': 's5-7',
@@ -124,7 +124,7 @@ series = [
             },
             {
                 'name': '6',
-                'template': Template(r"./img/chapters/chapter6.png", record_pos=(-0.031, -0.129), resolution=(2340, 1080)),
+                'template': Template(r"./img/chapters/chapter6.png", record_pos=(-0.027, 0.017), resolution=(2340, 1080)),
                 'missions': [
                     {
                         'name': '6-16',
@@ -134,7 +134,7 @@ series = [
             },
             {
                 'name': '7',
-                'template': Template(r"./img/chapters/chapter7.png", record_pos=(0.288, -0.129), resolution=(2340, 1080)),
+                'template': Template(r"./img/chapters/chapter7.png", record_pos=(0.295, 0.008), resolution=(2340, 1080)),
                 'missions': [
                     {
                         'name': '7-6',
@@ -194,7 +194,7 @@ series = [
 
 # 坐标模糊化
 def rangeTarget (targetAxios):
-    d = random.randint(-10, 10)
+    d = random.randint(-5, 5)
     return [targetAxios[0] + d, targetAxios[1] + d]
 
 # 模糊化点击图片
@@ -223,7 +223,7 @@ def swipeToArea(target, size):
     sleep(2)
     while (not exists(target)):
         swipe(v1=[1800, 300], vector=[step, 0], duration=0.5)
-        sleep(1.0)
+        sleep(2.0)
     rangeTouchImg(target)
     sleep(2.0)
 
@@ -231,7 +231,7 @@ def swipeToArea(target, size):
 def fight(times=1):
     num = 0
     while(times > 0):
-        num += 0
+        num += 1
         times -= 1
         rangeTouchImg(Template(r"./img/missionIcon/action-start.png", record_pos=(0.45, 0.189), resolution=(2340, 1080)))
         sleep(2)
@@ -252,7 +252,7 @@ def fight(times=1):
         sleep(1)
         wait(Template(r"./img/missionIcon/mission-complete.png", record_pos=(-0.352, 0.178), resolution=(2340, 1080)), timeout=2000, interval=5)
         touch(rangeTarget([200, 200]))
-        print(str.join(['已刷:', str(num), '次；剩余：'， str(times), '次']))
+        print(''.join(['已刷:', str(num), "次; 剩余：", str(times), '次']))
         sleep(3)
 
 # 完整的一个关卡流程
@@ -269,7 +269,6 @@ def run(seryName='主线', chapterName='1', missionName='1-7', times=1):
                             break
                     break
             break
-    print(seryTarget, chapterTarget, missionTarget)
     goToSeries(seryTarget)
     swipeToArea(chapterTarget, 'big')
     swipeToArea(missionTarget, 'small')
@@ -278,14 +277,9 @@ def run(seryName='主线', chapterName='1', missionName='1-7', times=1):
 
 # ======刷图配置=======
 # 例如
-# run('主线', '7', '7-6', 8)
-# run('主线', '1', '1-7', 20)
-# run('主线', '5', '5-10', 10)
+run('主线', '5', '5-10', 40)
+run('主线', '7', '7-6', 2)
+run('主线', '7', '7-16', 18)
+run('主线', '2', '2-5', 5)
 
 # ===================
-
-
-
-
-
-
