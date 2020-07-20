@@ -3,7 +3,7 @@ __author__ = "Doctor"
 
 # ================刷图相关的配置在这里=================
 # 是否使用理智补给：'none'不用，'potion'仅使用药剂，'rock'使用药剂+源石
-USE_SUPPLY = 'rock'
+USE_SUPPLY = 'none'
 
 # ===================================================
 
@@ -13,7 +13,7 @@ from airtest.core.api import *
 # 识别图片的阈值
 ST.THRESHOLD = 0.95
 # exists判断的超时时间
-ST.FIND_TIMEOUT_TMP = 1
+ST.FIND_TIMEOUT_TMP = 3
 
 import random
 
@@ -221,12 +221,12 @@ def goToSeries(target):
 
 # 从左到右滑动，寻找相关选项
 def swipeToArea(target, size):
-    step = -0.25 if (size is 'small') else -0.5
+    step = -0.2 if (size is 'small') else -0.5
     swipe(v1=[300, 300], vector=[1, 0], duration=0.2)
     swipe(v1=[300, 300], vector=[1, 0], duration=0.2)
     sleep(rt(2))
     while (not exists(target)):
-        swipe(v1=[1800, 300], vector=[step, 0], duration=0.5)
+        swipe(v1=[1800, 300], vector=[step, 0], duration=0.8)
         sleep(rt(2))
     rangeTouchImg(target)
     sleep(rt(2))
@@ -234,19 +234,26 @@ def swipeToArea(target, size):
 # 刷关卡
 def fight(times=1):
     num = 0
+    # todo 
+    # 如果没有选择代理指挥，则勾选代理指挥
+    
     while(times > 0):
         num += 1
         times -= 1
         rangeTouchImg(Template(r"./img/missionIcon/action-start.png", record_pos=(0.45, 0.189), resolution=(2340, 1080)))
         sleep(rt(2))
         supplyTmp = Template(r"./img/missionIcon/use-supply.png", record_pos=(0.287, 0.139), resolution=(2340, 1080))
+        # 如果体力不足了
         if (exists(supplyTmp)):
+            # 不需要补充体力
             if (USE_SUPPLY is 'none'):
                 break
+            # 只喝体力药
             elif (USE_SUPPLY is 'potion'):
                 if (exists(Template(r"./img/missionIcon/use-rock.png", record_pos=(0.126, -0.025), resolution=(2340, 1080)))):
                     break
                 else: rangeTouchImg(supplyTmp)
+            # 不仅喝体力药，还要碎石
             else:
                 rangeTouchImg(supplyTmp)
             sleep(rt(1))
@@ -254,6 +261,10 @@ def fight(times=1):
             sleep(rt(2))
         rangeTouchImg(Template(r"./img/missionIcon/action-start-im.png", record_pos=(0.294, 0.092), resolution=(2340, 1080)))
         sleep(rt(1))
+        # todo
+        # 现在暂时只考虑了正常的行动结束
+        # 还需考虑 不小心升级了
+        # 还需考虑 过凌晨4点后的每日登录提醒
         wait(Template(r"./img/missionIcon/mission-complete.png", record_pos=(-0.352, 0.178), resolution=(2340, 1080)), timeout=2000, interval=5)
         sleep(rt(3))
         touch(rangeTarget([200, 200]))
@@ -282,7 +293,7 @@ def run(seryName='主线', chapterName='1', missionName='1-7', times=1):
 
 # ======刷图配置=======
 # 例如
-# run('主线', '5', '5-10', 33)
+# run('主线', '5', '5-10', 30)
 # run('主线', '7', '7-6', 2)
 # run('主线', '7', '7-16', 18)
 # run('主线', '2', '2-5', 5)
