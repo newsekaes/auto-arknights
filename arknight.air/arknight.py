@@ -192,6 +192,10 @@ series = [
     }
 ]
 
+# 时间模糊化
+def rt(time):
+    return time + random.randint(0,2)
+
 # 坐标模糊化
 def rangeTarget (targetAxios):
     d = random.randint(-5, 5)
@@ -204,28 +208,28 @@ def rangeTouchImg(template):
 # 进入到某个关卡系列
 # params: '主线', '物资筹备', '芯片搜索'
 def goToSeries(target):
-    sleep(1.0)
+    sleep(rt(1))
     if exists(Template(r"./img/nav/home-fight.png", record_pos=(0.271, -0.132), resolution=(2340, 1080))):
         rangeTouchImg(Template(r"./img/nav/home-fight.png", record_pos=(0.271, -0.132), resolution=(2340, 1080)))
     else:
         rangeTouchImg(Template(r"./img/nav/top-home.png", record_pos=(-0.326, -0.205), resolution=(2340, 1080)))
-        sleep(1.0)
+        sleep(rt(1))
         rangeTouchImg(Template(r"./img/nav/top-fight.png", record_pos=(-0.071, -0.173), resolution=(2340, 1080)))
-    sleep(1.0)
+    sleep(rt(1))
     rangeTouchImg(target)
-    sleep(2.0)
+    sleep(rt(2))
 
 # 从左到右滑动，寻找相关选项
 def swipeToArea(target, size):
     step = -0.25 if (size is 'small') else -0.5
     swipe(v1=[300, 300], vector=[1, 0], duration=0.2)
     swipe(v1=[300, 300], vector=[1, 0], duration=0.2)
-    sleep(2)
+    sleep(rt(2))
     while (not exists(target)):
         swipe(v1=[1800, 300], vector=[step, 0], duration=0.5)
-        sleep(2.0)
+        sleep(rt(2))
     rangeTouchImg(target)
-    sleep(2.0)
+    sleep(rt(2))
 
 # 刷关卡
 def fight(times=1):
@@ -234,7 +238,7 @@ def fight(times=1):
         num += 1
         times -= 1
         rangeTouchImg(Template(r"./img/missionIcon/action-start.png", record_pos=(0.45, 0.189), resolution=(2340, 1080)))
-        sleep(2)
+        sleep(rt(2))
         supplyTmp = Template(r"./img/missionIcon/use-supply.png", record_pos=(0.287, 0.139), resolution=(2340, 1080))
         if (exists(supplyTmp)):
             if (USE_SUPPLY is 'none'):
@@ -245,15 +249,16 @@ def fight(times=1):
                 else: rangeTouchImg(supplyTmp)
             else:
                 rangeTouchImg(supplyTmp)
-            sleep(1)
+            sleep(rt(1))
             rangeTouchImg(Template(r"./img/missionIcon/action-start.png", record_pos=(0.45, 0.189), resolution=(2340, 1080)))
-            sleep(2)
+            sleep(rt(2))
         rangeTouchImg(Template(r"./img/missionIcon/action-start-im.png", record_pos=(0.294, 0.092), resolution=(2340, 1080)))
-        sleep(1)
+        sleep(rt(1))
         wait(Template(r"./img/missionIcon/mission-complete.png", record_pos=(-0.352, 0.178), resolution=(2340, 1080)), timeout=2000, interval=5)
+        sleep(rt(3))
         touch(rangeTarget([200, 200]))
         print(''.join(['已刷:', str(num), "次; 剩余：", str(times), '次']))
-        sleep(3)
+        sleep(rt(3))
 
 # 完整的一个关卡流程
 def run(seryName='主线', chapterName='1', missionName='1-7', times=1):
@@ -277,9 +282,9 @@ def run(seryName='主线', chapterName='1', missionName='1-7', times=1):
 
 # ======刷图配置=======
 # 例如
-run('主线', '5', '5-10', 40)
-run('主线', '7', '7-6', 2)
-run('主线', '7', '7-16', 18)
-run('主线', '2', '2-5', 5)
+# run('主线', '5', '5-10', 33)
+# run('主线', '7', '7-6', 2)
+# run('主线', '7', '7-16', 18)
+# run('主线', '2', '2-5', 5)
 
 # ===================
