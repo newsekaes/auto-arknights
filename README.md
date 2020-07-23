@@ -5,9 +5,7 @@
 ![在第三方网站上获得的刷图规划计划](blog/penguin.png)
 #### 2. 在刷图器中书写规划代码
 ```
-run('主线'， '3'， '3-4'， 4)
-run('主线'， '5'， '5-10'， 7)
-run('主线'， '2'， '2-5'， 10)
+run([["3-4", 4],["5-10", 7],["2-5", 10]])
 ```
 ---
 ## 1. 使用方法
@@ -16,9 +14,9 @@ run('主线'， '2'， '2-5'， 10)
 
 ### 2. 连接设备或模拟器
 1. [Android真机连接](https://airtest.doc.io.netease.com/IDEdocs/device_connection/1_android_phone_connection/)  
-> [Android连接常见问题](https://airtest.doc.io.netease.com/IDEdocs/device_connection/2_android_faq/)
+> [Android连接常见问题](https://airtest.doc.io.netease.com/IDEdocs/device_connection/2_android_faq/) [手机连不上或有问题，八成能在这里找到解决方法]
 2. [Android模拟器连接](https://airtest.doc.io.netease.com/IDEdocs/device_connection/3_emulator_connection/)
-3. [IOS设备连接](https://airtest.doc.io.netease.com/IDEdocs/device_connection/4_ios_connection/)
+3. [IOS设备连接](https://airtest.doc.io.netease.com/IDEdocs/device_connection/4_ios_connection/) [IOS要配合Mac进行使用]
 
 ### 3. 使用Airtest IDE运行脚本
 [下载脚本地址](https://github.com/newsekaes/auto-arknights/releases/)  
@@ -105,10 +103,13 @@ fight(999)
 ```
 当然`999`表示次数，你可以自定义自己想刷多少次
 
-### 2. 不想自动碎石嗑体力怎么办
+### 2. 不想自动碎石嗑体力或无限碎石怎么办
 ```
 # 是否使用理智补给：'none'不用，'potion'仅使用药剂，'rock'使用药剂+源石
 USE_SUPPLY = 'rock'
+
+# 如果设置了可用源石，那么单次运行，允许使用的最大源石数； 如果设为-1，则无限碎石头
+max_rock_num = 10
 ```
 如果不想嗑药不想碎石，就改成 `'none'`; 如果只想使用药剂，改为`'potion'`
 

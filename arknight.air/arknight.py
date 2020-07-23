@@ -7,18 +7,23 @@ logger.setLevel(logging.ERROR)
 
 from airtest.core.api import *
 # 识别图片的阈值
-ST.THRESHOLD = 0.95
+ST.THRESHOLD = 0.92
+ST.THRESHOLD_STRICT = 0.92
 # exists判断的超时时间
-ST.FIND_TIMEOUT_TMP = 3
+ST.FIND_TIMEOUT_TMP = 1
 
 import random
 import time
 w,h=device().get_current_resolution() #获取手机分辨率
+print(w, h)
 auto_setup(__file__)
 
 # ================刷图相关的配置在这里=================
 # 是否使用理智补给：'none'不用，'potion'仅使用药剂，'rock'使用药剂+源石
 USE_SUPPLY = 'rock'
+
+# 如果设置了可用源石，那么单次运行，允许使用的最大源石数； 如果设为-1，则无限碎石头
+max_rock_num = 10
 
 # 关卡最少耗时，默认60，即至少60秒后才开启 关卡完成 检测
 MIN_MISSION_TIME = 60
@@ -44,6 +49,12 @@ _gameDayLoginClose = Template(r"./img/signIn/game-day-login-close.png", record_p
 currentSery = ''
 currentChapter = ''
 currentMission = ''
+currentSeryTarget = ''
+currentChapterTarget = ''
+currentMissionTarget = ''
+
+__test__mode = False
+__random__time = 1
 
 # arknights 关卡数据
 series = [
@@ -268,9 +279,27 @@ series = [
     }
 ]
 
+
+# 整理对照表
+def mgnMaps():
+    maps = {}
+    for s in series:
+        seryName = s['name']
+        seryTarget = s['template']
+        for c in s['chapters']:
+            chapterName = c['name']
+            chapterTarget = c['template']
+            for m in c['missions']:
+                missionName = m['name']
+                missionTarget = m['template']
+                maps[missionName] = { 'seryTarget': seryTarget, 'chapterTarget': chapterTarget, 'missionTarget': missionTarget, 'seryName': seryName, 'chapterName': chapterName, 'missionName': missionName }
+    return maps
+
+missionMaps = mgnMaps()
+
 # 时间模糊化
 def rt(time):
-    return time + random.randint(0,1)
+    return time + random.randint(0, __random__time)
 
 # 坐标模糊化
 def rangeTarget (targetAxios, range=5):
@@ -282,10 +311,20 @@ def rangeTouchImg(template):
     touch(rangeTarget(exists(template)))
 
 # 设置全局
-def setCurrent(s, c, m):
+def setCurrent(s, c, m, st, ct, mt):
+    global currentSery
+    global currentChapter
+    global currentMission
+    global currentSeryTarget
+    global currentChapterTarget
+    global currentMissionTarget
+
     currentSery = s
     currentChapter = c
     currentMission = m
+    currentSeryTarget = st
+    currentChapterTarget = ct
+    currentMissionTarget = mt
 
 # 跳过每日登陆和月卡签到
 def skipSignIn():
@@ -340,17 +379,17 @@ def swipeToArea(target, size):
         return True
     # 如果没有寻找到，则再从左到右寻找
     # 最大重试次数
-    maxTimes = 15
-    vStartLeft = [0.128*w, 0.278*w]
-    vStartRight = [0.769*w, 0.278*w]
-    step = -0.25 if (size == 'small') else -0.5
+    maxTimes = 15 if (size == 'small') else 5
+    vStartLeft = [0.128*w, 0.278*h]
+    vStartRight = [0.769*w, 0.278*h]
+    step = -0.2 if (size == 'small') else -0.5
     swipe(v1=vStartLeft, vector=[1, 0], duration=0.2)
     swipe(v1=vStartLeft, vector=[1, 0], duration=0.2)
     sleep(rt(2))
     while ((not exists(target)) and maxTimes > 0):
         maxTimes -= 1
-        swipe(vStartRight, vector=[step, 0], duration=0.5)
-        touch(v=vStartRight, duration=1)
+        swipe(vStartRight, vector=[step, 0], steps=30, duration=0.7)
+        touch([0.5*w, 0.08*h], duration=2)
     if (maxTimes <= 0):
         return False
     else:
@@ -360,6 +399,7 @@ def swipeToArea(target, size):
 
 # 刷关卡
 def fight(times=1, missionTarget=False):
+    global max_rock_num
     _proxy = Template(r"./img/missionIcon/proxy.png", record_pos=(0.409, 0.149), resolution=(2340, 1080))
     _actionStart = Template(r"./img/missionIcon/action-start.png", record_pos=(0.45, 0.189), resolution=(2340, 1080))
     _actionStartIm = Template(r"./img/missionIcon/action-start-im.png", record_pos=(0.294, 0.092), resolution=(2340, 1080))
@@ -377,7 +417,9 @@ def fight(times=1, missionTarget=False):
     # 如果没有选择代理指挥，则勾选代理指挥
     if (exists(_proxy)):
         touch(_proxy)
-
+    if (__test__mode):
+        point = '进入关卡_'+currentMission+'-测试截图'
+        assert_exists(_actionStart, point)
     while(times > 0):
         num += 1
         times -= 1
@@ -401,6 +443,11 @@ def fight(times=1, missionTarget=False):
                 else: rangeTouchImg(_supply)
             # 不仅喝体力药，还要碎石
             else:
+                # 如果是碎石，那么考虑最大碎石头数
+                if (exists(_useRock)):
+                    if (max_rock_num == 0):
+                        break
+                    max_rock_num -= 1
                 rangeTouchImg(_supply)
             sleep(rt(1))
             rangeTouchImg(_actionStart)
@@ -439,47 +486,64 @@ def fight(times=1, missionTarget=False):
         # 如果刚好进入了每日登陆
         if (ACROSS_NIGHT and skipSignIn()):
             if ((currentSery == '') and (currentChapter == '') and (currentMission == '')):
-                run(currentSery, currentChapter, currentMission, times)
-            break
+                goToSeries(currentSeryTarget)
+                swipeToArea(currentChapterTarget)
+                swipeToArea(currentMissionTarget)
 
 # 完整的一个关卡流程
-def run(seryName='主线', chapterName='1', missionName='1-7', times=1):
-    seryTarget = False
-    chapterTarget = False
-    missionTarget = False
-    for s in series:
-        if (s['name'] == seryName):
-            seryTarget = s['template']
-            for c in s['chapters']:
-                if (c['name'] == chapterName):
-                    chapterTarget = c['template']
-                    for m in c['missions']:
-                        if (m['name'] == missionName):
-                            missionTarget = m['template']
-                            break
-                    break
-            break
-    if (not (seryTarget and chapterTarget and missionTarget)):
-        print ('未找到以下关卡信息：' + seryName + '_' + chapterName + '_' + missionName)
-        return False
+def runMission(seryName, chapterName, missionName, seryTarget, chapterTarget, missionTarget, times=1):
     if (goToSeries(seryTarget)):
         if (swipeToArea(chapterTarget, 'big')):
             if (swipeToArea(missionTarget, 'small')):
-                setCurrent(seryName, chapterName, missionName)
+                setCurrent(seryName, chapterName, missionName, seryTarget, chapterTarget, missionTarget)
                 print('------------------'+ seryName + ': ' + missionName +'--------------------')
                 fight(times, missionTarget)
-                setCurrent('', '', '')
             else:
-                print('关卡不存在或未开放：' + seryName)
+                print('关卡不存在或未开放：' + missionName)
         else:
-            print('章节不存在或未开放：' + seryName)
+            print('章节不存在或未开放：' + chapterName)
     else:
         print('系列不存在或未开放：' + seryName)
 
+# 检查关卡是否存在
+def checkMission(mList=[]):
+    passed = True
+    length = len(mList)
+    for i in mList:
+        name = i[0]
+        times = i[1]
+        if (not missionMaps[name]):
+            passed = False
+            print('关卡'+name+'未在脚本数据中')
+        if (times < 0):
+            passed = False
+            print('关卡'+name+'的重复数不可为负')
+    return passed
+# 执行函数
+def run(runList=[]):
+    if (checkMission(runList)):
+        for i in runList:
+            name = i[0]
+            times = i[1]
+            missionInfo = missionMaps[i[0]]
+            runMission(missionInfo['seryName'], missionInfo['chapterName'], missionInfo['missionName'], missionInfo['seryTarget'], missionInfo['chapterTarget'], missionInfo['missionTarget'], times)
+
+# 对全部关卡进行测试并截图报告
+def runTest():
+    global __test__mode
+    global __random__time
+    __test__mode = True
+    cacheRandomTime = __random__time
+    __random__time = 0
+    runList = []
+    for i in missionMaps:
+        runList.append([i, 0])
+    run(runList)
+    sleep(1)
+    __test__mode = False
+    __random__time = cacheRandomTime
+
 # ======刷图流程=======
 # 例如
-# run('主线', '7', '7-16', 18)
-# run('物资筹备', 'ce', 'ce-5', 99)
-# run('芯片搜索', 'pr-b', 'pr-b-2', 10)
-
+# run([["7-16", 0],["ce-5", 0],["pr-b-2", 0]])
 # ===================
