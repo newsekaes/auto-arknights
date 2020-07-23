@@ -12,7 +12,8 @@ ST.THRESHOLD = 0.95
 ST.FIND_TIMEOUT_TMP = 3
 
 import random
-
+import time
+w,h=device().get_current_resolution() #获取手机分辨率
 auto_setup(__file__)
 
 # ================刷图相关的配置在这里=================
@@ -310,6 +311,11 @@ def skipSignIn():
 # 进入到某个关卡系列
 # params: '主线', '物资筹备', '芯片搜索'
 def goToSeries(target):
+    # 先尝试寻找目标
+    if (exists(target)):
+        rangeTouchImg(target)
+        sleep(rt(2))
+        return True
     sleep(rt(1))
     if exists(Template(r"./img/nav/home-fight.png", record_pos=(0.271, -0.132), resolution=(2340, 1080))):
         rangeTouchImg(Template(r"./img/nav/home-fight.png", record_pos=(0.271, -0.132), resolution=(2340, 1080)))
@@ -327,16 +333,24 @@ def goToSeries(target):
 
 # 从左到右滑动，寻找相关选项
 def swipeToArea(target, size):
+    # 先直接尝试寻找目标
+    if (exists(target)):
+        rangeTouchImg(target)
+        sleep(rt(2))
+        return True
+    # 如果没有寻找到，则再从左到右寻找
     # 最大重试次数
     maxTimes = 15
+    vStartLeft = [0.128*w, 0.278*w]
+    vStartRight = [0.769*w, 0.278*w]
     step = -0.25 if (size == 'small') else -0.5
-    swipe(v1=[300, 300], vector=[1, 0], duration=0.2)
-    swipe(v1=[300, 300], vector=[1, 0], duration=0.2)
+    swipe(v1=vStartLeft, vector=[1, 0], duration=0.2)
+    swipe(v1=vStartLeft, vector=[1, 0], duration=0.2)
     sleep(rt(2))
     while ((not exists(target)) and maxTimes > 0):
         maxTimes -= 1
-        swipe(v1=[1800, 300], vector=[step, 0], duration=0.5)
-        touch(v=[300, 300], duration=2)
+        swipe(vStartRight, vector=[step, 0], duration=0.5)
+        touch(v=vStartRight, duration=1)
     if (maxTimes <= 0):
         return False
     else:
@@ -351,11 +365,14 @@ def fight(times=1, missionTarget=False):
     _actionStartIm = Template(r"./img/missionIcon/action-start-im.png", record_pos=(0.294, 0.092), resolution=(2340, 1080))
     _supply = Template(r"./img/missionIcon/use-supply.png", record_pos=(0.287, 0.139), resolution=(2340, 1080))
     _useRock = Template(r"./img/missionIcon/use-rock.png", record_pos=(0.126, -0.025), resolution=(2340, 1080))
+    _cancelUse = Template(r"./img/missionIcon/cancel-use.png", record_pos=(0.089, 0.139), resolution=(2340, 1080))
     _levelUp = Template(r"./img/missionIcon/level-up.png", record_pos=(-0.198, 0.010), resolution=(2340, 1080))
     _missionComplete = Template(r"./img/missionIcon/mission-complete.png", record_pos=(-0.352, 0.178), resolution=(2340, 1080))
     _actionFailed = Template(r"./img/missionIcon/action-failed.png", record_pos=(0.22, -0.026), resolution=(2340, 1080))
     _proxyFailed = Template(r"./img/missionIcon/proxy-failed.png", record_pos=(-0.216, -0.048), resolution=(2340, 1080))
     _giveUp = Template(r"./img/missionIcon/give-up.png", record_pos=(-0.149, 0.114), resolution=(2340, 1080))
+    # 本关卡的默认时间为全局配置的时间；重复通关同一关卡后，该时间会被不断优化修正
+    minMissionTime = MIN_MISSION_TIME
     num = 0
     # 如果没有选择代理指挥，则勾选代理指挥
     if (exists(_proxy)):
@@ -374,10 +391,12 @@ def fight(times=1, missionTarget=False):
         if (exists(_supply)):
             # 不需要补充体力
             if (USE_SUPPLY == 'none'):
+                rangeTouchImg(_cancelUse)
                 break
             # 只喝体力药
             elif (USE_SUPPLY == 'potion'):
                 if (exists(_useRock)):
+                    rangeTouchImg(_cancelUse)
                     break
                 else: rangeTouchImg(_supply)
             # 不仅喝体力药，还要碎石
@@ -387,14 +406,19 @@ def fight(times=1, missionTarget=False):
             rangeTouchImg(_actionStart)
             sleep(rt(2))
         rangeTouchImg(_actionStartIm)
+        # 记录关卡开始的时间戳
+        timeStart = int(time.time())
         # 最快的关卡2倍速也不会低于 MIN_MISSION_TIME
-        sleep(rt(MIN_MISSION_TIME))
+        sleep(rt(minMissionTime))
         while True:
             # 如果任务完成了
             if (exists(_missionComplete)):
                 sleep(rt(3))
                 touch(rangeTarget([230, 230], 30))
                 sleep(rt(3))
+                print(''.join(['已刷:', str(num), "次; 剩余：", str(times), '次']))
+                # 记录关卡结束后的时间戳，并重新计算关卡时间
+                minMissionTime = (int(time.time()) - timeStart) - 10
                 break
             # 如果代理失误了
             elif (PROXY_ERROR_CHECK and exists(_proxyFailed)):
@@ -411,7 +435,6 @@ def fight(times=1, missionTarget=False):
             # 如果任务未完成，等待5s, 继续循环
             else:
                 sleep(5)
-        print(''.join(['已刷:', str(num), "次; 剩余：", str(times), '次']))
         sleep(rt(3))
         # 如果刚好进入了每日登陆
         if (ACROSS_NIGHT and skipSignIn()):
