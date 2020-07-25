@@ -15,7 +15,7 @@ run([["3-4", 4],["5-10", 7],["2-5", 10]])
 ### 2. 连接设备或模拟器
 1. [Android真机连接](https://airtest.doc.io.netease.com/IDEdocs/device_connection/1_android_phone_connection/)  
 > [Android连接常见问题](https://airtest.doc.io.netease.com/IDEdocs/device_connection/2_android_faq/) [手机连不上或有问题，八成能在这里找到解决方法]
-2. [Android模拟器连接](https://airtest.doc.io.netease.com/IDEdocs/device_connection/3_emulator_connection/)
+2. [Android模拟器连接](https://airtest.doc.io.netease.com/IDEdocs/device_connection/3_emulator_connection/) [模拟器必须使用 N * 1080 分辨率，推荐 1920 * 1080]
 3. [IOS设备连接](https://airtest.doc.io.netease.com/IDEdocs/device_connection/4_ios_connection/) [IOS要配合Mac进行使用]
 
 ### 3. 使用Airtest IDE运行脚本
@@ -35,32 +35,63 @@ run([["3-4", 4],["5-10", 7],["2-5", 10]])
     1：
         1-7
     2：
+        2-3
+        s2-5
+        s2-6
+        s2-7
         2-5
+        2-6
+        s2-8
+        s2-9
         2-10
     3：
         3-1
         3-2
         3-3
+        s3-1
+        s3-2
         3-4
+        3-7
+        s3-3
+        s3-4
+        s3-6
     4：
         4-2
+        s4-1
         4-4
+        4-5
         4-6
         4-7
         4-8
         4-9
-        s4-1
+        s4-10
+        4-10
     5：
+        5-1
+        5-3
+        5-7
+        5-8
         s5-7
+        s5-8
         5-10
     6：
+        6-2
+        6-4
+        6-5
+        6-11
+        6-12
         6-16
     7：
-        7-16
+        7-4
+        7-5
+        7-6
+        7-8
         7-10
         7-12
         7-15
         7-16
+        7-17
+        7-18
 物资筹备：
     ls:
         ls-5
@@ -70,13 +101,21 @@ run([["3-4", 4],["5-10", 7],["2-5", 10]])
         ca-5
     ce:
         ce-5
+    sk:
+        sk-5
 芯片搜索：
+    pr-a:
+        pr-a-1
+        pr-a-2
     pr-d:
         pr-d-1
         pr-d-2
     pr-b:
         pr-b-1
         pr-b-2
+    pr-c
+        pr-c-1
+        pr-c-2
 ```
 ## 3. 高级：自定义刷图配置
 在脚本上方有这么一部分
@@ -124,11 +163,4 @@ LEVEL_UP_CHECK = False
 ```
 # 开启代理失败检测，True开启，False关闭。如果对自己的代理有信心，关闭即可
 PROXY_ERROR_CHECK = False
-```
-
-### 5. 夜猫子模式（慎用，不推荐）
-> 本人非夜猫子，故该功能未经足够测试
-```
-# 开启凌晨4点跨夜模式。此功能尚未完全测试完成，不建议使用（不建议熬夜玩游戏伤身体）
-ACROSS_NIGHT = False
 ```

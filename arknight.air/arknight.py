@@ -14,6 +14,7 @@ ST.FIND_TIMEOUT_TMP = 1
 
 import random
 import time
+
 w,h=device().get_current_resolution() #获取手机分辨率
 print(w, h)
 auto_setup(__file__)
@@ -23,7 +24,7 @@ auto_setup(__file__)
 USE_SUPPLY = 'rock'
 
 # 如果设置了可用源石，那么单次运行，允许使用的最大源石数； 如果设为-1，则无限碎石头
-max_rock_num = 10
+max_rock_num = -1
 
 # 关卡最少耗时，默认60，即至少60秒后才开启 关卡完成 检测
 MIN_MISSION_TIME = 60
@@ -45,6 +46,20 @@ _gameMonthLogin = Template(r"./img/signIn/game-month-login.png", record_pos=(0.0
 _gameMonthLoginClose = Template(r"./img/signIn/game-month-login-close.png", record_pos=(0.0, 0.181), resolution=(2340, 1080))
 _gameDayLogin = Template(r"./img/signIn/game-day-login.png", record_pos=(0.239, 0.158), resolution=(2340, 1080))
 _gameDayLoginClose = Template(r"./img/signIn/game-day-login-close.png", record_pos=(0.36, -0.182), resolution=(2340, 1080))
+_barLeft = Template(r"./img/nav/bar-left.png", record_pos=(-0.469, -0.206), resolution=(2340, 1080))
+
+
+_proxy = Template(r"./img/missionIcon/proxy.png", record_pos=(0.409, 0.149), resolution=(2340, 1080))
+_actionStart = Template(r"./img/missionIcon/action-start.png", record_pos=(0.45, 0.189), resolution=(2340, 1080))
+_actionStartIm = Template(r"./img/missionIcon/action-start-im.png", record_pos=(0.294, 0.092), resolution=(2340, 1080))
+_supply = Template(r"./img/missionIcon/use-supply.png", record_pos=(0.287, 0.139), resolution=(2340, 1080))
+_useRock = Template(r"./img/missionIcon/use-rock.png", record_pos=(0.126, -0.025), resolution=(2340, 1080))
+_cancelUse = Template(r"./img/missionIcon/cancel-use.png", record_pos=(0.089, 0.139), resolution=(2340, 1080))
+_levelUp = Template(r"./img/missionIcon/level-up.png", record_pos=(-0.198, 0.010), resolution=(2340, 1080))
+_missionComplete = Template(r"./img/missionIcon/mission-complete.png", record_pos=(-0.32, 0.139), resolution=(2340, 1080))
+_actionFailed = Template(r"./img/missionIcon/action-failed.png", record_pos=(0.22, -0.026), resolution=(2340, 1080))
+_proxyFailed = Template(r"./img/missionIcon/proxy-failed.png", record_pos=(-0.216, -0.048), resolution=(2340, 1080))
+_giveUp = Template(r"./img/missionIcon/give-up.png", record_pos=(-0.149, 0.114), resolution=(2340, 1080))
 
 currentSery = ''
 currentChapter = ''
@@ -52,6 +67,7 @@ currentMission = ''
 currentSeryTarget = ''
 currentChapterTarget = ''
 currentMissionTarget = ''
+currentMissionOrder = 0
 
 __test__mode = False
 __random__time = 1
@@ -64,11 +80,11 @@ series = [
         'chapters': [
             {
                 'name': '1',
-                'template': Template(r"./img/chapters/chapter1.png", record_pos=(-0.257, 0.007), resolution=(2340, 1080)),
+                'template': Template(r"./img/chapters/chapter1.png", record_pos=(-0.257, 0.007), resolution=(2340, 1080), ),
                 'missions': [
                     {
                         'name': '1-7',
-                        'template': Template(r"./img/missions/1-7.png", record_pos=(0.07, -0.088), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/1-7.png", record_pos=(0.07, -0.088), resolution=(2340, 1080), rgb=True)
                     }
                 ]
             },
@@ -77,12 +93,40 @@ series = [
                 'template': Template(r"./img/chapters/chapter2.png", record_pos=(0.287, 0.029), resolution=(2340, 1080)),
                 'missions': [
                     {
+                        'name': '2-3',
+                        'template': Template(r"./img/missions/2-3.png", record_pos=(0.078, 0.047), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': 's2-5',
+                        'template': Template(r"./img/missions/s2-5.png", record_pos=(-0.193, -0.014), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': 's2-6',
+                        'template': Template(r"./img/missions/s2-6.png", record_pos=(-0.311, 0.048), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': 's2-7',
+                        'template': Template(r"./img/missions/s2-7.png", record_pos=(-0.116, 0.049), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
                         'name': '2-5',
-                        'template': Template(r"./img/missions/2-5.png", record_pos=(0.13, 0.043), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/2-5.png", record_pos=(0.13, 0.043), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': '2-6',
+                        'template': Template(r"./img/missions/2-6.png", record_pos=(0.221, 0.047), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': 's2-8',
+                        'template': Template(r"./img/missions/s2-8.png", record_pos=(-0.094, 0.048), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': 's2-9',
+                        'template': Template(r"./img/missions/s2-9.png", record_pos=(-0.052, 0.048), resolution=(2340, 1080), rgb=True)
                     },
                     {
                         'name': '2-10',
-                        'template': Template(r"./img/missions/2-10.png", record_pos=(0.3, 0.044), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/2-10.png", record_pos=(0.3, 0.044), resolution=(2340, 1080), rgb=True)
                     },
                 ],
             },
@@ -92,19 +136,43 @@ series = [
                 'missions': [
                     {
                         'name': '3-1',
-                        'template': Template(r"./img/missions/3-1.png", record_pos=(-0.081, -0.009), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/3-1.png", record_pos=(-0.081, -0.009), resolution=(2340, 1080), rgb=True)
                     },
                     {
                         'name': '3-2',
-                        'template': Template(r"./img/missions/3-2.png", record_pos=(-0.379, -0.015), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/3-2.png", record_pos=(-0.379, -0.015), resolution=(2340, 1080), rgb=True)
                     },
                     {
                         'name': '3-3',
-                        'template': Template(r"./img/missions/3-3.png", record_pos=(-0.2, -0.018), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/3-3.png", record_pos=(-0.2, -0.018), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': 's3-1',
+                        'template': Template(r"./img/missions/s3-1.png", record_pos=(-0.034, 0.116), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': 's3-2',
+                        'template': Template(r"./img/missions/s3-2.png", record_pos=(-0.203, 0.116), resolution=(2340, 1080), rgb=True)
                     },
                     {
                         'name': '3-4',
-                        'template': Template(r"./img/missions/3-4.png", record_pos=(0.036, 0.038), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/3-4.png", record_pos=(0.036, 0.038), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': '3-7',
+                        'template': Template(r"./img/missions/3-7.png", record_pos=(-0.124, -0.028), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': 's3-3',
+                        'template': Template(r"./img/missions/s3-3.png", record_pos=(0.169, 0.041), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': 's3-4',
+                        'template': Template(r"./img/missions/s3-4.png", record_pos=(0.347, 0.04), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': 's3-6',
+                        'template': Template(r"./img/missions/s3-6.png", record_pos=(0.018, 0.041), resolution=(2340, 1080), rgb=True)
                     },
                 ]
             },
@@ -114,35 +182,48 @@ series = [
                 'missions': [
                     {
                         'name': '4-2',
-                        'template': Template(r"./img/missions/4-2.png", record_pos=(0.044, 0.056), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/4-2.png", record_pos=(-0.131, 0.059), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': 's4-1',
+                        'template': Template(r"./img/missions/s4-1.png", record_pos=(0.122, 0.059), resolution=(2340, 1080), rgb=True)
                     },
                     {
                         'name': '4-4',
-                        'template': Template(r"./img/missions/4-4.png", record_pos=(0.157, -0.012), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/4-4.png", record_pos=(-0.347, -0.01), resolution=(2340, 1080), rgb=True)
+
+                    },
+                    {
+                        'name': '4-5',
+                        'template': Template(r"./img/missions/4-5.png", record_pos=(-0.206, -0.068), resolution=(2340, 1080), rgb=True)
 
                     },
                     {
                         'name': '4-6',
-                        'template': Template(r"./img/missions/4-6.png", record_pos=(0.158, -0.013), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/4-6.png", record_pos=(-0.282, -0.01), resolution=(2340, 1080), rgb=True)
 
                     },
                     {
                         'name': '4-7',
-                        'template': Template(r"./img/missions/4-7.png", record_pos=(-0.154, -0.014), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/4-7.png", record_pos=(-0.304, -0.01), resolution=(2340, 1080), rgb=True)
                     },
                     {
                         'name': '4-8',
-                        'template': Template(r"./img/missions/4-8.png", record_pos=(-0.018, -0.071), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/4-8.png", record_pos=(-0.166, -0.068), resolution=(2340, 1080), rgb=True)
 
                     },
                     {
                         'name': '4-9',
-                        'template': Template(r"./img/missions/4-9.png", record_pos=(0.112, -0.013), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/4-9.png", record_pos=(-0.036, -0.009), resolution=(2340, 1080), rgb=True)
                     },
                     {
-                        'name': 's4-1',
-                        'template': Template(r"./img/missions/s4-1.png", record_pos=(-0.056, 0.057), resolution=(2340, 1080))
-                    }
+                        'name': 's4-10',
+                        'template': Template(r"./img/missions/s4-10.png", record_pos=(-0.099, -0.071), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': '4-10',
+                        'template': Template(r"./img/missions/4-10.png", record_pos=(0.248, -0.011), resolution=(2340, 1080), rgb=True)
+                    },
                 ]
             },
             {
@@ -150,13 +231,33 @@ series = [
                 'template': Template(r"./img/chapters/chapter5.png", record_pos=(-0.002, 0.018), resolution=(2340, 1080)),
                 'missions': [
                     {
+                        'name': '5-1',
+                        'template':Template(r"./img/missions/5-1.png", record_pos=(0.021, 0.029), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': '5-3',
+                        'template':Template(r"./img/missions/5-3.png", record_pos=(0.141, -0.024), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': '5-7',
+                        'template':Template(r"./img/missions/5-7.png", record_pos=(-0.056, -0.066), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': '5-8',
+                        'template':Template(r"./img/missions/5-8.png", record_pos=(0.159, -0.001), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
                         'name': 's5-7',
-                        'template':Template(r"./img/missions/s5-7.png", record_pos=(0.215, 0.067), resolution=(2340, 1080))
+                        'template':Template(r"./img/missions/s5-7.png", record_pos=(0.215, 0.067), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': 's5-8',
+                        'template':Template(r"./img/missions/s5-8.png", record_pos=(-0.109, 0.071), resolution=(2340, 1080), rgb=True)
                     },
                     {
                         'name': '5-10',
-                        'template': Template(r"./img/missions/5-10.png", record_pos=(0.035, -0.011), resolution=(2340, 1080))
-                    }
+                        'template': Template(r"./img/missions/5-10.png", record_pos=(0.035, -0.011), resolution=(2340, 1080), rgb=True)
+                    },
                 ]
             },
             {
@@ -164,8 +265,28 @@ series = [
                 'template': Template(r"./img/chapters/chapter6.png", record_pos=(-0.027, 0.017), resolution=(2340, 1080)),
                 'missions': [
                     {
+                        'name': '6-2',
+                        'template': Template(r"./img/missions/6-2.png", record_pos=(0.07, -0.056), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': '6-4',
+                        'template': Template(r"./img/missions/6-4.png", record_pos=(-0.003, 0.051), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': '6-5',
+                        'template': Template(r"./img/missions/6-5.png", record_pos=(-0.075, -0.005), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': '6-11',
+                        'template': Template(r"./img/missions/6-11.png", record_pos=(-0.074, 0.039), resolution=(2340, 1080)),
+                    },
+                    {
+                        'name': '6-12',
+                        'template': Template(r"./img/missions/6-12.png", record_pos=(0.028, -0.015), resolution=(2340, 1080)),
+                    },
+                    {
                         'name': '6-16',
-                        'template':Template(r"./img/missions/6-16.png", record_pos=(0.116, -0.025), resolution=(2340, 1080))
+                        'template':Template(r"./img/missions/6-16.png", record_pos=(0.116, -0.025), resolution=(2340, 1080), rgb=True)
                     }
                 ]
             },
@@ -174,25 +295,45 @@ series = [
                 'template': Template(r"./img/chapters/chapter7.png", record_pos=(0.295, 0.008), resolution=(2340, 1080)),
                 'missions': [
                     {
+                        'name': '7-4',
+                        'template': Template(r"./img/missions/7-4.png", record_pos=(-0.126, 0.064), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': '7-5',
+                        'template': Template(r"./img/missions/7-5.png", record_pos=(0.059, 0.062), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
                         'name': '7-6',
-                        'template': Template(r"./img/missions/7-6.png", record_pos=(-0.049, 0.009), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/7-6.png", record_pos=(-0.049, 0.009), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': '7-8',
+                        'template': Template(r"./img/missions/7-8.png", record_pos=(0.11, 0.012), resolution=(2340, 1080), rgb=True)
                     },
                     {
                         'name': '7-10',
-                        'template':Template(r"./img/missions/7-10.png", record_pos=(-0.021, -0.066), resolution=(2340, 1080))
+                        'template':Template(r"./img/missions/7-10.png", record_pos=(-0.021, -0.066), resolution=(2340, 1080), rgb=True)
                     },
                     {
                         'name': '7-12',
-                        'template': Template(r"./img/missions/7-12.png", record_pos=(0.26, 0.07), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/7-12.png", record_pos=(0.26, 0.07), resolution=(2340, 1080), rgb=True)
                     },
                     {
                         'name': '7-15',
-                        'template': Template(r"./img/missions/7-15.png", record_pos=(-0.046, 0.0), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/7-15.png", record_pos=(-0.046, 0.0), resolution=(2340, 1080), rgb=True)
                     },
                     {
                         'name': '7-16',
-                        'template':Template(r"./img/missions/7-16.png", record_pos=(0.097, -0.072), resolution=(2340, 1080))
-                    }
+                        'template':Template(r"./img/missions/7-16.png", record_pos=(0.097, -0.072), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': '7-17',
+                        'template':Template(r"./img/missions/7-17.png", record_pos=(0.058, -0.012), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': '7-18',
+                        'template':Template(r"./img/missions/7-18.png", record_pos=(-0.244, -0.01), resolution=(2340, 1080), rgb=True)
+                    },
                 ]
             },
         ]
@@ -202,12 +343,12 @@ series = [
         '物资筹备','template': Template(r"./img/series/wuzichoubei.png", record_pos=(-0.347, 0.194), resolution=(2340, 1080)),
         'chapters': [
             {
-                    'name': 'ls',
+                'name': 'ls',
                 'template': Template(r"./img/chapters/ls.png", record_pos=(-0.341, 0.09), resolution=(2340, 1080)),
                 'missions': [
                     {
                         'name': 'ls-5',
-                        'template': Template(r"./img/missions/ls-5.png", record_pos=(0.205, -0.118), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/ls-5.png", record_pos=(0.205, -0.118), resolution=(2340, 1080), rgb=True)
                     }
                 ]
             },
@@ -217,7 +358,17 @@ series = [
                 'missions': [
                     {
                         'name': 'ap-5',
-                        'template': Template(r"./img/missions/ap-5.png", record_pos=(0.206, -0.117), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/ap-5.png", record_pos=(0.206, -0.117), resolution=(2340, 1080), rgb=True)
+                    }
+                ]
+            },
+            {
+                'name': 'sk',
+                'template': Template(r"./img/chapters/sk.png", record_pos=(0.0, 0.066), resolution=(2340, 1080)),
+                'missions': [
+                    {
+                        'name': 'sk-5',
+                        'template': Template(r"./img/missions/sk-5.png", record_pos=(0.214, -0.115), resolution=(2340, 1080), rgb=True)
                     }
                 ]
             },
@@ -227,7 +378,7 @@ series = [
                 'missions': [
                     {
                         'name': 'ca-5',
-                        'template': Template(r"./img/missions/ca-5.png", record_pos=(0.203, -0.117), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/ca-5.png", record_pos=(0.203, -0.117), resolution=(2340, 1080), rgb=True)
                     }
                 ]
             },
@@ -237,7 +388,7 @@ series = [
                 'missions': [
                     {
                         'name': 'ce-5',
-                        'template': Template(r"./img/missions/ce-5.png", record_pos=(0.201, -0.118), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/ce-5.png", record_pos=(0.201, -0.118), resolution=(2340, 1080), rgb=True)
                     }
                 ]
             }
@@ -248,16 +399,44 @@ series = [
         'template': Template(r"./img/series/xinpiansousuo.png", record_pos=(-0.251, 0.193), resolution=(2340, 1080)),
         'chapters': [
             {
+                'name': 'pr-a',
+                'template': Template(r"./img/chapters/pr-a.png", record_pos=(-0.256, 0.071), resolution=(2340, 1080)),
+                'missions': [
+                    {
+                        'name': 'pr-a-1',
+                        'template': Template(r"./img/missions/pr-a-1.png", record_pos=(-0.135, 0.056), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': 'pr-a-2',
+                        'template': Template(r"./img/missions/pr-a-2.png", record_pos=(0.124, -0.065), resolution=(2340, 1080), rgb=True)
+                    },
+                ]
+            },
+            {
+                'name': 'pr-c',
+                'template': Template(r"./img/chapters/pr-c.png", record_pos=(-0.105, 0.09), resolution=(1920, 1080), rgb=True),
+                'missions': [
+                    {
+                        'name': 'pr-c-1',
+                        'template': Template(r"./img/missions/pr-c-1.png", record_pos=(-0.195, 0.043), resolution=(1920, 1080), rgb=True)
+                    },
+                    {
+                        'name': 'pr-c-2',
+                        'template': Template(r"./img/missions/pr-c-2.png", record_pos=(0.152, -0.075), resolution=(1920, 1080), rgb=True)
+                    }
+                ]
+            },
+            {
                 'name': 'pr-b',
                 'template': Template(r"./img/chapters/pr-b.png", record_pos=(-0.258, 0.074), resolution=(2340, 1080)),
                 'missions': [
                     {
                         'name': 'pr-b-1',
-                        'template': Template(r"./img/missions/pr-b-1.png", record_pos=(-0.157, 0.052), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/pr-b-1.png", record_pos=(-0.157, 0.052), resolution=(2340, 1080), rgb=True)
                     },
                     {
                         'name': 'pr-b-2',
-                        'template': Template(r"./img/missions/pr-b-2.png", record_pos=(0.134, -0.074), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/pr-b-2.png", record_pos=(0.134, -0.074), resolution=(2340, 1080), rgb=True)
                     }
                 ]
             },
@@ -267,11 +446,11 @@ series = [
                 'missions': [
                     {
                         'name': 'pr-d-1',
-                        'template': Template(r"./img/missions/pr-d-1.png", record_pos=(-0.147, 0.048), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/pr-d-1.png", record_pos=(-0.147, 0.048), resolution=(2340, 1080), rgb=True)
                     },
                     {
                         'name': 'pr-d-2',
-                        'template': Template(r"./img/missions/pr-d-2.png", record_pos=(0.124, -0.063), resolution=(2340, 1080))
+                        'template': Template(r"./img/missions/pr-d-2.png", record_pos=(0.124, -0.063), resolution=(2340, 1080), rgb=True)
                     },
                 ]
             }
@@ -290,9 +469,10 @@ def mgnMaps():
             chapterName = c['name']
             chapterTarget = c['template']
             for m in c['missions']:
+                index = c['missions'].index(m)
                 missionName = m['name']
                 missionTarget = m['template']
-                maps[missionName] = { 'seryTarget': seryTarget, 'chapterTarget': chapterTarget, 'missionTarget': missionTarget, 'seryName': seryName, 'chapterName': chapterName, 'missionName': missionName }
+                maps[missionName] = { 'seryTarget': seryTarget, 'chapterTarget': chapterTarget, 'missionTarget': missionTarget, 'seryName': seryName, 'chapterName': chapterName, 'missionName': missionName, 'missionOrder': index }
     return maps
 
 missionMaps = mgnMaps()
@@ -311,13 +491,14 @@ def rangeTouchImg(template):
     touch(rangeTarget(exists(template)))
 
 # 设置全局
-def setCurrent(s, c, m, st, ct, mt):
+def setCurrent(s, c, m, st, ct, mt, mo):
     global currentSery
     global currentChapter
     global currentMission
     global currentSeryTarget
     global currentChapterTarget
     global currentMissionTarget
+    global currentMissionOrder
 
     currentSery = s
     currentChapter = c
@@ -325,6 +506,7 @@ def setCurrent(s, c, m, st, ct, mt):
     currentSeryTarget = st
     currentChapterTarget = ct
     currentMissionTarget = mt
+    currentMissionOrder = mo
 
 # 跳过每日登陆和月卡签到
 def skipSignIn():
@@ -349,7 +531,7 @@ def skipSignIn():
 
 # 进入到某个关卡系列
 # params: '主线', '物资筹备', '芯片搜索'
-def goToSeries(target):
+def goToSeries(target, name=''):
     # 先尝试寻找目标
     if (exists(target)):
         rangeTouchImg(target)
@@ -368,31 +550,39 @@ def goToSeries(target):
         sleep(rt(2))
         return True
     else:
+        print('系列不存在或未开放：' + name)
         return False
 
 # 从左到右滑动，寻找相关选项
-def swipeToArea(target, size):
+def swipeToArea(target, type, name='', missionOrder=False):
     # 先直接尝试寻找目标
     if (exists(target)):
+        if (__test__mode and type == 'mission'): return True
         rangeTouchImg(target)
         sleep(rt(2))
         return True
     # 如果没有寻找到，则再从左到右寻找
     # 最大重试次数
-    maxTimes = 15 if (size == 'small') else 5
+    maxTimes = 15 if (type == 'mission') else 5
     vStartLeft = [0.128*w, 0.278*h]
     vStartRight = [0.769*w, 0.278*h]
-    step = -0.2 if (size == 'small') else -0.5
-    swipe(v1=vStartLeft, vector=[1, 0], duration=0.2)
-    swipe(v1=vStartLeft, vector=[1, 0], duration=0.2)
+    step = -0.2 if (type == 'mission') else -0.5
+    if ((missionOrder is False)):
+        swipe(v1=vStartLeft, vector=[1, 0], duration=0.2)
+        swipe(v1=vStartLeft, vector=[1, 0], duration=0.2)
+    else:
+        step = -step if (missionOrder < currentMissionOrder) else step
     sleep(rt(2))
     while ((not exists(target)) and maxTimes > 0):
         maxTimes -= 1
         swipe(vStartRight, vector=[step, 0], steps=30, duration=0.7)
         touch([0.5*w, 0.08*h], duration=2)
     if (maxTimes <= 0):
+        des = '关卡' if (type == 'mission') else '章节'
+        print(des + '不存在或未开放：' + name)
         return False
     else:
+        if (__test__mode and type == 'mission'): return True
         rangeTouchImg(target)
         sleep(rt(2))
         return True
@@ -400,33 +590,20 @@ def swipeToArea(target, size):
 # 刷关卡
 def fight(times=1, missionTarget=False):
     global max_rock_num
-    _proxy = Template(r"./img/missionIcon/proxy.png", record_pos=(0.409, 0.149), resolution=(2340, 1080))
-    _actionStart = Template(r"./img/missionIcon/action-start.png", record_pos=(0.45, 0.189), resolution=(2340, 1080))
-    _actionStartIm = Template(r"./img/missionIcon/action-start-im.png", record_pos=(0.294, 0.092), resolution=(2340, 1080))
-    _supply = Template(r"./img/missionIcon/use-supply.png", record_pos=(0.287, 0.139), resolution=(2340, 1080))
-    _useRock = Template(r"./img/missionIcon/use-rock.png", record_pos=(0.126, -0.025), resolution=(2340, 1080))
-    _cancelUse = Template(r"./img/missionIcon/cancel-use.png", record_pos=(0.089, 0.139), resolution=(2340, 1080))
-    _levelUp = Template(r"./img/missionIcon/level-up.png", record_pos=(-0.198, 0.010), resolution=(2340, 1080))
-    _missionComplete = Template(r"./img/missionIcon/mission-complete.png", record_pos=(-0.352, 0.178), resolution=(2340, 1080))
-    _actionFailed = Template(r"./img/missionIcon/action-failed.png", record_pos=(0.22, -0.026), resolution=(2340, 1080))
-    _proxyFailed = Template(r"./img/missionIcon/proxy-failed.png", record_pos=(-0.216, -0.048), resolution=(2340, 1080))
-    _giveUp = Template(r"./img/missionIcon/give-up.png", record_pos=(-0.149, 0.114), resolution=(2340, 1080))
     # 本关卡的默认时间为全局配置的时间；重复通关同一关卡后，该时间会被不断优化修正
     minMissionTime = MIN_MISSION_TIME
     num = 0
     # 如果没有选择代理指挥，则勾选代理指挥
     if (exists(_proxy)):
         touch(_proxy)
-    if (__test__mode):
-        point = '进入关卡_'+currentMission+'-测试截图'
-        assert_exists(_actionStart, point)
     while(times > 0):
         num += 1
         times -= 1
-        # 判断关卡有没有被选择
-        if (missionTarget and exists(missionTarget)):
-            rangeTouchImg(missionTarget)
-            sleep(rt(1))
+        # # 判断关卡有没有被选择
+        # if (missionTarget and exists(missionTarget)):
+        #     rangeTouchImg(missionTarget)
+        #     sleep(rt(1))
+        wait(_actionStart)
         rangeTouchImg(_actionStart)
         sleep(rt(2))
         # 如果体力不足了
@@ -449,23 +626,33 @@ def fight(times=1, missionTarget=False):
                         break
                     max_rock_num -= 1
                 rangeTouchImg(_supply)
-            sleep(rt(1))
+            sleep(rt(3))
             rangeTouchImg(_actionStart)
             sleep(rt(2))
         rangeTouchImg(_actionStartIm)
+        sysTimeStart = (int(time.strftime("%H", time.localtime())))
         # 记录关卡开始的时间戳
         timeStart = int(time.time())
         # 最快的关卡2倍速也不会低于 MIN_MISSION_TIME
         sleep(rt(minMissionTime))
         while True:
-            # 如果任务完成了
+            isCompleted = False
+            # 预先检查是否完成
             if (exists(_missionComplete)):
-                sleep(rt(3))
-                touch(rangeTarget([230, 230], 30))
-                sleep(rt(3))
-                print(''.join(['已刷:', str(num), "次; 剩余：", str(times), '次']))
+                isCompleted = True
                 # 记录关卡结束后的时间戳，并重新计算关卡时间
                 minMissionTime = (int(time.time()) - timeStart) - 10
+                # 检测到后，先等待3秒
+                sleep(rt(4))
+            # 如果任务完成了
+            if (exists(_missionComplete)):
+                if (not isCompleted):
+                    isCompleted = True
+                    sleep(rt(4))
+                    minMissionTime = (int(time.time()) - timeStart) - 10
+                touch(rangeTarget([230, 230], 30))
+                print(''.join(['已刷:', str(num), "次; 剩余：", str(times), '次']))
+                sysTimeEnd = (int(time.strftime("%H", time.localtime())))
                 break
             # 如果代理失误了
             elif (PROXY_ERROR_CHECK and exists(_proxyFailed)):
@@ -484,26 +671,35 @@ def fight(times=1, missionTarget=False):
                 sleep(5)
         sleep(rt(3))
         # 如果刚好进入了每日登陆
-        if (ACROSS_NIGHT and skipSignIn()):
-            if ((currentSery == '') and (currentChapter == '') and (currentMission == '')):
-                goToSeries(currentSeryTarget)
-                swipeToArea(currentChapterTarget)
-                swipeToArea(currentMissionTarget)
+        if (sysTimeStart == 3 and sysTimeEnd == 4 and ACROSS_NIGHT and skipSignIn()):
+            if (not ((currentSery == '') and (currentChapter == '') and (currentMission == ''))):
+                goToSeries(currentSeryTarget, currentSery)
+                swipeToArea(currentChapterTarget, 'chapter', currentChapter)
+                swipeToArea(currentMissionTarget, 'mission', currentMission)
 
 # 完整的一个关卡流程
-def runMission(seryName, chapterName, missionName, seryTarget, chapterTarget, missionTarget, times=1):
-    if (goToSeries(seryTarget)):
-        if (swipeToArea(chapterTarget, 'big')):
-            if (swipeToArea(missionTarget, 'small')):
-                setCurrent(seryName, chapterName, missionName, seryTarget, chapterTarget, missionTarget)
-                print('------------------'+ seryName + ': ' + missionName +'--------------------')
-                fight(times, missionTarget)
-            else:
-                print('关卡不存在或未开放：' + missionName)
-        else:
-            print('章节不存在或未开放：' + chapterName)
+def runMission(seryName, chapterName, missionName, seryTarget, chapterTarget, missionTarget, missionOrder, times=1):
+    isSameChapter = False
+    if (seryName == currentSery):
+        if (not __test__mode):
+            touch(_barLeft)
+            sleep(1)
+        if (chapterName != currentChapter):
+            touch(_barLeft)
+            sleep(1)
+            if (not swipeToArea(chapterTarget, 'chapter', chapterName)): return
+        else: isSameChapter = True
     else:
-        print('系列不存在或未开放：' + seryName)
+        if (not goToSeries(seryTarget, seryName)): return
+        if (not swipeToArea(chapterTarget, 'chapter', chapterName)): return
+    if (not swipeToArea(missionTarget, 'mission', missionName, isSameChapter and missionOrder)): return
+    setCurrent(seryName, chapterName, missionName, seryTarget, chapterTarget, missionTarget, missionOrder)
+    print('------------------'+ seryName + ': ' + missionName +'--------------------')
+    if (__test__mode):
+        point = '进入关卡_'+currentMission+'-测试截图'
+        assert_exists(missionTarget, point)
+        return
+    else: fight(times, missionTarget)
 
 # 检查关卡是否存在
 def checkMission(mList=[]):
@@ -526,18 +722,20 @@ def run(runList=[]):
             name = i[0]
             times = i[1]
             missionInfo = missionMaps[i[0]]
-            runMission(missionInfo['seryName'], missionInfo['chapterName'], missionInfo['missionName'], missionInfo['seryTarget'], missionInfo['chapterTarget'], missionInfo['missionTarget'], times)
+            runMission(missionInfo['seryName'], missionInfo['chapterName'], missionInfo['missionName'], missionInfo['seryTarget'], missionInfo['chapterTarget'], missionInfo['missionTarget'], missionInfo['missionOrder'], times)
 
 # 对全部关卡进行测试并截图报告
-def runTest():
+def runTest(start=False):
     global __test__mode
     global __random__time
     __test__mode = True
     cacheRandomTime = __random__time
     __random__time = 0
+    startCollect = False if (start) else True
     runList = []
     for i in missionMaps:
-        runList.append([i, 0])
+        if (not startCollect): startCollect = i == start
+        if (startCollect): runList.append([i, 0])
     run(runList)
     sleep(1)
     __test__mode = False
@@ -547,3 +745,12 @@ def runTest():
 # 例如
 # run([["7-16", 0],["ce-5", 0],["pr-b-2", 0]])
 # ===================
+
+
+
+
+
+
+
+
+
