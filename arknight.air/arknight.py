@@ -30,10 +30,10 @@ max_rock_num = -1
 MIN_MISSION_TIME = 60
 
 # 开启升级检测功能，True开启，False关闭。关闭此检测后，关卡结束会更快，满级大佬必备
-LEVEL_UP_CHECK = False
+LEVEL_UP_CHECK = True
 
 # 开启代理失败检测，True开启，False关闭。如果对自己的代理有信心，关闭即可
-PROXY_ERROR_CHECK = False
+PROXY_ERROR_CHECK = True
 
 # 开启凌晨4点跨夜模式，True开启，False关闭。此功能尚未完全测试完成，不建议使用（不建议熬夜玩游戏伤身体）
 ACROSS_NIGHT = False
@@ -68,6 +68,7 @@ currentSeryTarget = ''
 currentChapterTarget = ''
 currentMissionTarget = ''
 currentMissionOrder = 0
+currentDeps = 0
 
 __test__mode = False
 __random__time = 1
@@ -239,6 +240,10 @@ series = [
                         'template':Template(r"./img/missions/5-3.png", record_pos=(0.141, -0.024), resolution=(2340, 1080), rgb=True)
                     },
                     {
+                        'name': '5-5',
+                        'template':Template(r"./img/missions/5-5.png", record_pos=(-0.143, -0.024), resolution=(2244, 1080), rgb=True)
+                    },
+                    {
                         'name': '5-7',
                         'template':Template(r"./img/missions/5-7.png", record_pos=(-0.056, -0.066), resolution=(2340, 1080), rgb=True)
                     },
@@ -354,7 +359,7 @@ series = [
             },
             {
                 'name': 'ap',
-                'template': Template(r"./img/chapters/ap.png", record_pos=(-0.173, 0.094), resolution=(2340, 1080)),
+                'template': Template(r"./img/chapters/ap.png", record_pos=(-0.145, 0.08), resolution=(1920, 1080)),
                 'missions': [
                     {
                         'name': 'ap-5',
@@ -488,7 +493,7 @@ def rangeTarget (targetAxios, range=5):
 
 # 模糊化点击图片
 def rangeTouchImg(template):
-    touch(rangeTarget(exists(template)))
+    touch(rangeTarget(exists(template)), duration=0.03)
 
 # 设置全局
 def setCurrent(s, c, m, st, ct, mt, mo):
@@ -544,7 +549,7 @@ def goToSeries(target, name=''):
         rangeTouchImg(Template(r"./img/nav/top-home.png", record_pos=(-0.326, -0.205), resolution=(2340, 1080)))
         sleep(rt(1))
         rangeTouchImg(Template(r"./img/nav/top-fight.png", record_pos=(-0.071, -0.173), resolution=(2340, 1080)))
-    sleep(rt(1))
+    sleep(rt(3))
     if (exists(target)):
         rangeTouchImg(target)
         sleep(rt(2))
@@ -575,7 +580,7 @@ def swipeToArea(target, type, name='', missionOrder=False):
     sleep(rt(2))
     while ((not exists(target)) and maxTimes > 0):
         maxTimes -= 1
-        swipe(vStartRight, vector=[step, 0], steps=30, duration=0.7)
+        swipe(vStartRight, vector=[step, 0], steps=30, duration=1)
         touch([0.5*w, 0.08*h], duration=2)
     if (maxTimes <= 0):
         des = '关卡' if (type == 'mission') else '章节'
@@ -627,8 +632,10 @@ def fight(times=1, missionTarget=False):
                     max_rock_num -= 1
                 rangeTouchImg(_supply)
             sleep(rt(3))
+            wait(_actionStart)
             rangeTouchImg(_actionStart)
             sleep(rt(2))
+        wait(_actionStartIm)
         rangeTouchImg(_actionStartIm)
         sysTimeStart = (int(time.strftime("%H", time.localtime())))
         # 记录关卡开始的时间戳
@@ -658,6 +665,9 @@ def fight(times=1, missionTarget=False):
             elif (PROXY_ERROR_CHECK and exists(_proxyFailed)):
                 touch(_giveUp)
                 touch(wait(_actionFailed))
+                num -= 1
+                times += 1
+                print('------代理失误------')
                 break
             # 如果升级了
             elif (LEVEL_UP_CHECK and exists(_levelUp)):
@@ -671,27 +681,32 @@ def fight(times=1, missionTarget=False):
                 sleep(5)
         sleep(rt(3))
         # 如果刚好进入了每日登陆
-        if (sysTimeStart == 3 and sysTimeEnd == 4 and ACROSS_NIGHT and skipSignIn()):
-            if (not ((currentSery == '') and (currentChapter == '') and (currentMission == ''))):
-                goToSeries(currentSeryTarget, currentSery)
-                swipeToArea(currentChapterTarget, 'chapter', currentChapter)
-                swipeToArea(currentMissionTarget, 'mission', currentMission)
+        # if (sysTimeStart == 3 and sysTimeEnd == 4 and ACROSS_NIGHT and skipSignIn()):
+        #     if (not ((currentSery == '') and (currentChapter == '') and (currentMission == ''))):
+        #         goToSeries(currentSeryTarget, currentSery)
+        #         swipeToArea(currentChapterTarget, 'chapter', currentChapter)
+        #         swipeToArea(currentMissionTarget, 'mission', currentMission)
 
 # 完整的一个关卡流程
 def runMission(seryName, chapterName, missionName, seryTarget, chapterTarget, missionTarget, missionOrder, times=1):
+    global currentDeps
     isSameChapter = False
     if (seryName == currentSery):
-        if (not __test__mode):
-            touch(_barLeft)
-            sleep(1)
+        wait(_actionStart)
+        touch([0.5*w, 0.08*h])
         if (chapterName != currentChapter):
-            touch(_barLeft)
-            sleep(1)
+            if (currentDeps == 2):
+                touch(_barLeft)
+                currentDeps = 1
+                sleep(1)
             if (not swipeToArea(chapterTarget, 'chapter', chapterName)): return
+            currentDeps = 2
         else: isSameChapter = True
     else:
         if (not goToSeries(seryTarget, seryName)): return
+        currentDeps = 1
         if (not swipeToArea(chapterTarget, 'chapter', chapterName)): return
+        currentDeps = 2
     if (not swipeToArea(missionTarget, 'mission', missionName, isSameChapter and missionOrder)): return
     setCurrent(seryName, chapterName, missionName, seryTarget, chapterTarget, missionTarget, missionOrder)
     print('------------------'+ seryName + ': ' + missionName +'--------------------')
@@ -745,12 +760,4 @@ def runTest(start=False):
 # 例如
 # run([["7-16", 0],["ce-5", 0],["pr-b-2", 0]])
 # ===================
-
-
-
-
-
-
-
-
 
