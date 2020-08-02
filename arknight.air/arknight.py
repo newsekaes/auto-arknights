@@ -55,12 +55,11 @@ _actionStartIm = Template(r"./img/missionIcon/action-start-im.png", record_pos=(
 _supply = Template(r"./img/missionIcon/use-supply.png", record_pos=(0.287, 0.139), resolution=(2340, 1080))
 _useRock = Template(r"./img/missionIcon/use-rock.png", record_pos=(0.126, -0.025), resolution=(2340, 1080))
 _cancelUse = Template(r"./img/missionIcon/cancel-use.png", record_pos=(0.089, 0.139), resolution=(2340, 1080))
-_levelUp = Template(r"./img/missionIcon/level-up.png", record_pos=(-0.198, 0.010), resolution=(2340, 1080))
+_levelUp = Template(r"./img/missionIcon/level-up.png", record_pos=(-0.198, 0.010), resolution=(2340, 1080), rgb=True, threshold=0.8)
 _missionComplete = Template(r"./img/missionIcon/mission-complete.png", record_pos=(-0.32, 0.139), resolution=(2340, 1080))
-_actionFailed = Template(r"./img/missionIcon/action-failed.png", record_pos=(0.22, -0.026), resolution=(2340, 1080))
-_proxyFailed = Template(r"./img/missionIcon/proxy-failed.png", record_pos=(-0.216, -0.048), resolution=(2340, 1080))
-_giveUp = Template(r"./img/missionIcon/give-up.png", record_pos=(-0.149, 0.114), resolution=(2340, 1080))
-
+_actionFailed = Template(r"./img/missionIcon/action-failed.png", record_pos=(0.22, -0.026), resolution=(2340, 1080), rgb=True, threshold=0.8)
+_proxyFailed = Template(r"./img/missionIcon/proxy-failed.png", record_pos=(0.17, 0.095), resolution=(2244, 1080), rgb=True, threshold=0.8)
+_giveUp = Template(r"./img/missionIcon/give-up.png", record_pos=(-0.149, 0.114), resolution=(2340, 1080), rgb=True, threshold=0.8)
 currentSery = ''
 currentChapter = ''
 currentMission = ''
@@ -349,7 +348,7 @@ series = [
         'chapters': [
             {
                 'name': 'ls',
-                'template': Template(r"./img/chapters/ls.png", record_pos=(-0.341, 0.09), resolution=(2340, 1080)),
+                'template': Template(r"./img/chapters/ls.png", record_pos=(-0.357, -0.059), resolution=(2244, 1080), rgb=True, threshold=0.8),
                 'missions': [
                     {
                         'name': 'ls-5',
@@ -359,7 +358,7 @@ series = [
             },
             {
                 'name': 'ap',
-                'template': Template(r"./img/chapters/ap.png", record_pos=(-0.145, 0.08), resolution=(1920, 1080)),
+                'template': Template(r"./img/chapters/ap.png", record_pos=(-0.179, -0.06), resolution=(2244, 1080), rgb=True, threshold=0.8),
                 'missions': [
                     {
                         'name': 'ap-5',
@@ -369,7 +368,7 @@ series = [
             },
             {
                 'name': 'sk',
-                'template': Template(r"./img/chapters/sk.png", record_pos=(0.0, 0.066), resolution=(2340, 1080)),
+                'template': Template(r"./img/chapters/sk.png", record_pos=(-0.002, -0.061), resolution=(2244, 1080), rgb=True, threshold=0.8),
                 'missions': [
                     {
                         'name': 'sk-5',
@@ -379,7 +378,7 @@ series = [
             },
             {
                 'name': 'ca',
-                'template': Template(r"./img/chapters/ca.png", record_pos=(-0.174, 0.075), resolution=(2340, 1080)),
+                'template': Template(r"./img/chapters/ca.png", record_pos=(0.356, -0.061), resolution=(2244, 1080), rgb=True, threshold=0.8),
                 'missions': [
                     {
                         'name': 'ca-5',
@@ -389,7 +388,7 @@ series = [
             },
             {
                 'name': 'ce',
-                'template': Template(r"./img/chapters/ce.png", record_pos=(-0.004, 0.068), resolution=(2340, 1080)),
+                'template': Template(r"./img/chapters/ce.png", record_pos=(0.179, -0.059), resolution=(2244, 1080), rgb=True, threshold=0.8),
                 'missions': [
                     {
                         'name': 'ce-5',
@@ -405,7 +404,7 @@ series = [
         'chapters': [
             {
                 'name': 'pr-a',
-                'template': Template(r"./img/chapters/pr-a.png", record_pos=(-0.256, 0.071), resolution=(2340, 1080)),
+                'template': Template(r"./img/chapters/pr-a.png", record_pos=(0.268, -0.06), resolution=(2244, 1080), rgb=True, threshold=0.8),
                 'missions': [
                     {
                         'name': 'pr-a-1',
@@ -419,7 +418,7 @@ series = [
             },
             {
                 'name': 'pr-c',
-                'template': Template(r"./img/chapters/pr-c.png", record_pos=(-0.105, 0.09), resolution=(1920, 1080), rgb=True),
+                'template': Template(r"./img/chapters/pr-c.png", record_pos=(-0.09, -0.061), resolution=(2244, 1080), rgb=True, threshold=0.8),
                 'missions': [
                     {
                         'name': 'pr-c-1',
@@ -433,7 +432,7 @@ series = [
             },
             {
                 'name': 'pr-b',
-                'template': Template(r"./img/chapters/pr-b.png", record_pos=(-0.258, 0.074), resolution=(2340, 1080)),
+                'template': Template(r"./img/chapters/pr-b.png", record_pos=(-0.268, -0.06), resolution=(2244, 1080), rgb=True, threshold=0.8),
                 'missions': [
                     {
                         'name': 'pr-b-1',
@@ -447,7 +446,7 @@ series = [
             },
             {
                 'name': 'pr-d',
-                'template': Template(r"./img/chapters/pr-d.png", record_pos=(-0.087, 0.074), resolution=(2340, 1080)),
+                'template': Template(r"./img/chapters/pr-d.png", record_pos=(0.089, -0.06), resolution=(2244, 1080), rgb=True, threshold=0.8),
                 'missions': [
                     {
                         'name': 'pr-d-1',
@@ -680,6 +679,7 @@ def fight(times=1, missionTarget=False):
             else:
                 sleep(5)
         sleep(rt(3))
+        wait(_actionStart)
         # 如果刚好进入了每日登陆
         # if (sysTimeStart == 3 and sysTimeEnd == 4 and ACROSS_NIGHT and skipSignIn()):
         #     if (not ((currentSery == '') and (currentChapter == '') and (currentMission == ''))):
@@ -692,7 +692,6 @@ def runMission(seryName, chapterName, missionName, seryTarget, chapterTarget, mi
     global currentDeps
     isSameChapter = False
     if (seryName == currentSery):
-        wait(_actionStart)
         touch([0.5*w, 0.08*h])
         if (chapterName != currentChapter):
             if (currentDeps == 2):
@@ -729,7 +728,7 @@ def checkMission(mList=[]):
         if (times < 0):
             passed = False
             print('关卡'+name+'的重复数不可为负')
-    return passed
+    return passedq
 # 执行函数
 def run(runList=[]):
     if (checkMission(runList)):
