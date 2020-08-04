@@ -728,7 +728,7 @@ def checkMission(mList=[]):
         if (times < 0):
             passed = False
             print('关卡'+name+'的重复数不可为负')
-    return passedq
+    return passed
 # 执行函数
 def run(runList=[]):
     if (checkMission(runList)):
