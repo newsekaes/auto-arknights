@@ -243,6 +243,10 @@ series = [
                         'template':Template(r"./img/missions/5-5.png", record_pos=(-0.143, -0.024), resolution=(2244, 1080), rgb=True)
                     },
                     {
+                        'name': '5-6',
+                        'template':Template(r"./img/missions/5-6.png", record_pos=(-0.127, -0.08), resolution=(1920, 1080), rgb=True)
+                    },
+                    {
                         'name': '5-7',
                         'template':Template(r"./img/missions/5-7.png", record_pos=(-0.056, -0.066), resolution=(2340, 1080), rgb=True)
                     },
@@ -759,4 +763,5 @@ def runTest(start=False):
 # 例如
 # run([["7-16", 0],["ce-5", 0],["pr-b-2", 0]])
 # ===================
+
 
