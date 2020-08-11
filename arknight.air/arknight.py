@@ -51,6 +51,7 @@ _barLeft = Template(r"./img/nav/bar-left.png", record_pos=(-0.469, -0.206), reso
 
 _proxy = Template(r"./img/missionIcon/proxy.png", record_pos=(0.409, 0.149), resolution=(2340, 1080))
 _actionStart = Template(r"./img/missionIcon/action-start.png", record_pos=(0.45, 0.189), resolution=(2340, 1080))
+_actionStart2 = Template(r"./img/missionIcon/action-start2.png", record_pos=(0.45, 0.191), resolution=(2340, 1080))
 _actionStartIm = Template(r"./img/missionIcon/action-start-im.png", record_pos=(0.294, 0.092), resolution=(2340, 1080))
 _supply = Template(r"./img/missionIcon/use-supply.png", record_pos=(0.287, 0.139), resolution=(2340, 1080))
 _useRock = Template(r"./img/missionIcon/use-rock.png", record_pos=(0.126, -0.025), resolution=(2340, 1080))
@@ -463,6 +464,40 @@ series = [
                 ]
             }
         ]
+    },
+    {
+        'name': '火蓝之心',
+        'template': Template(r"./img/series/hosf.png", record_pos=(0.039, 0.183), resolution=(2340, 1080)),
+        'chapters': [
+            {
+                'name': 'of',
+                'template': Template(r"./img/chapters/of.png", record_pos=(0.301, -0.021), resolution=(2340, 1080), rgb=True, threshold=0.8),
+                'missions': [
+                    {
+                        'name': 'of-6',
+                        'template': Template(r"./img/missions/of-6.png", record_pos=(-0.284, -0.092), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': 'of-7',
+                        'template': Template(r"./img/missions/of-7.png", record_pos=(0.065, -0.015), resolution=(2340, 1080), rgb=True)
+                    },
+                    {
+                        'name': 'of-8',
+                        'template': Template(r"./img/missions/of-8.png", record_pos=(0.217, 0.055), resolution=(2340, 1080), rgb=True)
+                    },
+                ]
+            },
+            {
+                'name': 'of-f',
+                'template': Template(r"./img/chapters/of-f.png", record_pos=(0.287, 0.035), resolution=(2340, 1080), rgb=True, threshold=0.8),
+                'missions': [
+                    {
+                        'name': 'of-f4',
+                        'template': Template(r"./img/missions/of-f4.png", record_pos=(0.24, -0.029), resolution=(2340, 1080))
+                    },
+                ]
+            }
+        ]
     }
 ]
 
@@ -596,8 +631,11 @@ def swipeToArea(target, type, name='', missionOrder=False):
         return True
 
 # 刷关卡
-def fight(times=1, missionTarget=False):
+def fight(times=1, missionTarget=False, actionStartChange=False):
     global max_rock_num
+    global _actionStart
+    global _actionStart2
+    _actionStartLocal = _actionStart2 if actionStartChange else _actionStart
     # 本关卡的默认时间为全局配置的时间；重复通关同一关卡后，该时间会被不断优化修正
     minMissionTime = MIN_MISSION_TIME
     num = 0
@@ -611,8 +649,8 @@ def fight(times=1, missionTarget=False):
         # if (missionTarget and exists(missionTarget)):
         #     rangeTouchImg(missionTarget)
         #     sleep(rt(1))
-        wait(_actionStart)
-        rangeTouchImg(_actionStart)
+        wait(_actionStartLocal)
+        rangeTouchImg(_actionStartLocal)
         sleep(rt(2))
         # 如果体力不足了
         if (exists(_supply)):
@@ -635,8 +673,8 @@ def fight(times=1, missionTarget=False):
                     max_rock_num -= 1
                 rangeTouchImg(_supply)
             sleep(rt(3))
-            wait(_actionStart)
-            rangeTouchImg(_actionStart)
+            wait(_actionStartLocal)
+            rangeTouchImg(_actionStartLocal)
             sleep(rt(2))
         wait(_actionStartIm)
         rangeTouchImg(_actionStartIm)
@@ -683,7 +721,7 @@ def fight(times=1, missionTarget=False):
             else:
                 sleep(5)
         sleep(rt(3))
-        wait(_actionStart)
+        wait(_actionStartLocal)
         # 如果刚好进入了每日登陆
         # if (sysTimeStart == 3 and sysTimeEnd == 4 and ACROSS_NIGHT and skipSignIn()):
         #     if (not ((currentSery == '') and (currentChapter == '') and (currentMission == ''))):
@@ -717,7 +755,7 @@ def runMission(seryName, chapterName, missionName, seryTarget, chapterTarget, mi
         point = '进入关卡_'+currentMission+'-测试截图'
         assert_exists(missionTarget, point)
         return
-    else: fight(times, missionTarget)
+    else: fight(times, missionTarget, seryName == 'hosf')
 
 # 检查关卡是否存在
 def checkMission(mList=[]):
@@ -763,5 +801,6 @@ def runTest(start=False):
 # 例如
 # run([["7-16", 0],["ce-5", 0],["pr-b-2", 0]])
 # ===================
+
 
 
