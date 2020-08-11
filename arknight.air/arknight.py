@@ -54,6 +54,7 @@ _actionStart = Template(r"./img/missionIcon/action-start.png", record_pos=(0.45,
 _actionStart2 = Template(r"./img/missionIcon/action-start2.png", record_pos=(0.45, 0.191), resolution=(2340, 1080))
 _actionStartIm = Template(r"./img/missionIcon/action-start-im.png", record_pos=(0.294, 0.092), resolution=(2340, 1080))
 _supply = Template(r"./img/missionIcon/use-supply.png", record_pos=(0.287, 0.139), resolution=(2340, 1080))
+_noTicket = Template(r"./img/missionIcon/no-ticket.png", record_pos=(0.387, -0.162), resolution=(2340, 1080))
 _useRock = Template(r"./img/missionIcon/use-rock.png", record_pos=(0.126, -0.025), resolution=(2340, 1080))
 _cancelUse = Template(r"./img/missionIcon/cancel-use.png", record_pos=(0.089, 0.139), resolution=(2340, 1080))
 _levelUp = Template(r"./img/missionIcon/level-up.png", record_pos=(-0.198, 0.010), resolution=(2340, 1080), rgb=True, threshold=0.8)
@@ -586,7 +587,9 @@ def goToSeries(target, name=''):
     else:
         rangeTouchImg(Template(r"./img/nav/top-home.png", record_pos=(-0.326, -0.205), resolution=(2340, 1080)))
         sleep(rt(1))
-        rangeTouchImg(Template(r"./img/nav/top-fight.png", record_pos=(-0.071, -0.173), resolution=(2340, 1080)))
+        rangeTouchImg(Template(r"./img/nav/home.png", record_pos=(-0.35, -0.06), resolution=(2340, 1080)))
+        sleep(rt(3))
+        touch(wait(Template(r"./img/nav/home-fight.png", record_pos=(0.271, -0.132), resolution=(2340, 1080))))
     sleep(rt(3))
     if (exists(target)):
         rangeTouchImg(target)
@@ -651,9 +654,12 @@ def fight(times=1, missionTarget=False, actionStartChange=False):
         #     sleep(rt(1))
         wait(_actionStartLocal)
         rangeTouchImg(_actionStartLocal)
-        sleep(rt(2))
+        sleep(2)
         # 如果体力不足了
-        if (exists(_supply)):
+        if (actionStartChange):
+            if (exists(_noTicket)):
+                break
+        elif (exists(_supply)):
             # 不需要补充体力
             if (USE_SUPPLY == 'none'):
                 rangeTouchImg(_cancelUse)
@@ -755,7 +761,7 @@ def runMission(seryName, chapterName, missionName, seryTarget, chapterTarget, mi
         point = '进入关卡_'+currentMission+'-测试截图'
         assert_exists(missionTarget, point)
         return
-    else: fight(times, missionTarget, seryName == 'hosf')
+    else: fight(times, missionTarget, seryName == '火蓝之心')
 
 # 检查关卡是否存在
 def checkMission(mList=[]):
@@ -801,6 +807,4 @@ def runTest(start=False):
 # 例如
 # run([["7-16", 0],["ce-5", 0],["pr-b-2", 0]])
 # ===================
-
-
 
