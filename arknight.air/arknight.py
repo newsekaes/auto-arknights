@@ -502,6 +502,10 @@ series = [
     }
 ]
 
+# 需要额外门票的关卡
+def isNeedTicket(chapterName):
+    needTicket = ['of-f']
+    return needTicket.count(chapterName) > 0
 
 # 整理对照表
 def mgnMaps():
@@ -761,7 +765,7 @@ def runMission(seryName, chapterName, missionName, seryTarget, chapterTarget, mi
         point = '进入关卡_'+currentMission+'-测试截图'
         assert_exists(missionTarget, point)
         return
-    else: fight(times, missionTarget, seryName == '火蓝之心')
+    else: fight(times, missionTarget, isNeedTicket(chapterName))
 
 # 检查关卡是否存在
 def checkMission(mList=[]):
@@ -807,4 +811,3 @@ def runTest(start=False):
 # 例如
 # run([["7-16", 0],["ce-5", 0],["pr-b-2", 0]])
 # ===================
-
