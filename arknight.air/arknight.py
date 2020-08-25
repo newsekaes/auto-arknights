@@ -499,6 +499,38 @@ series = [
                 ]
             }
         ]
+    },
+    {
+        'name': '密林悍将',
+        'template': Template(r"./img/series/gtgr.png", record_pos=(0.12, 0.188), resolution=(2400, 1080)),
+        'chapters': [
+            {
+                'name': 'ri',
+                'template': Template(r"./img/chapters/ri.png", record_pos=(0.399, -0.013), resolution=(2400, 1080), rgb=True, threshold=0.8),
+                'missions': [
+                    {
+                        'name': 'ri-4',
+                        'template': Template(r"./img/missions/ri-4.png", record_pos=(-0.255, 0.069), resolution=(2400, 1080), rgb=True)
+                    },
+                    {
+                        'name': 'ri-5',
+                        'template': Template(r"./img/missions/ri-5.png", record_pos=(0.096, 0.078), resolution=(2400, 1080), rgb=True)
+                    },
+                    {
+                        'name': 'ri-6',
+                        'template': Template(r"./img/missions/ri-6.png", record_pos=(-0.355, 0.076), resolution=(2400, 1080), rgb=True)
+                    },
+                    {
+                        'name': 'ri-7',
+                        'template': Template(r"./img/missions/ri-7.png", record_pos=(-0.099, -0.039), resolution=(2400, 1080), rgb=True)
+                    },
+                    {
+                        'name': 'ri-8',
+                        'template': Template(r"./img/missions/ri-8.png", record_pos=(-0.255, 0.028), resolution=(2400, 1080), rgb=True)
+                    }
+                ]
+            }
+        ]
     }
 ]
 
