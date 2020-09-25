@@ -531,6 +531,38 @@ series = [
                 ]
             }
         ]
+    },
+     {
+        'name': '踏寻往西之风',
+        'template': Template(r"./img/series/windpass.png", record_pos=(0.025, 0.19), resolution=(2400, 1080)),
+        'chapters': [
+            {
+                'name': 'fa',
+                'template': Template(r"./img/chapters/fa.png", record_pos=(-0.381, 0.066), resolution=(2400, 1080), rgb=True, threshold=0.8),
+                'missions': [
+                    {
+                        'name': 'fa-4',
+                        'template': Template(r"./img/missions/fa-4.png", record_pos=(-0.03, 0.047), resolution=(2400, 1080), rgb=True)
+                    },
+                    {
+                        'name': 'fa-5',
+                        'template': Template(r"./img/missions/fa-5.png", record_pos=(0.084, -0.042), resolution=(2400, 1080), rgb=True)
+                    },
+                    {
+                        'name': 'fa-6',
+                        'template': Template(r"./img/missions/fa-6.png", record_pos=(0.176, 0.084), resolution=(2400, 1080), rgb=True)
+                    },
+                    {
+                        'name': 'fa-7',
+                        'template': Template(r"./img/missions/fa-7.png", record_pos=(0.252, 0.013), resolution=(2400, 1080), rgb=True)
+                    },
+                    {
+                        'name': 'fa-8',
+                        'template': Template(r"./img/missions/fa-8.png", record_pos=(0.322, -0.075), resolution=(2400, 1080), rgb=True)
+                    }
+                ]
+            }
+        ]
     }
 ]
 
