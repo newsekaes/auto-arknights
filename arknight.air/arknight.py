@@ -563,6 +563,42 @@ series = [
                 ]
             }
         ]
+    },
+    {
+        'name': '骑兵与猎人',
+        'template': Template(r"./img/series/grani.png", record_pos=(0.024, 0.18), resolution=(2400, 1080)),
+        'chapters': [
+            {
+                'name': 'gt',
+                'template': Template(r"./img/chapters/gt.png", record_pos=(0.216, 0.018), resolution=(2400, 1080), rgb=True, threshold=0.8),
+                'missions': [
+                    {
+                        'name': 'gt-1',
+                        'template': Template(r"./img/missions/gt-1.png", record_pos=(-0.265, 0.015), resolution=(2400, 1080), rgb=True)
+                    },
+                    {
+                        'name': 'gt-2',
+                        'template': Template(r"./img/missions/gt-2.png", record_pos=(-0.185, -0.053), resolution=(2400, 1080), rgb=True)
+                    },
+                    {
+                        'name': 'gt-3',
+                        'template': Template(r"./img/missions/gt-3.png", record_pos=(-0.067, 0.004), resolution=(2400, 1080), rgb=True)
+                    },
+                    {
+                        'name': 'gt-4',
+                        'template': Template(r"./img/missions/gt-4.png", record_pos=(0.033, 0.081), resolution=(2400, 1080), rgb=True)
+                    },
+                    {
+                        'name': 'gt-5',
+                        'template': Template(r"./img/missions/gt-5.png", record_pos=(0.133, 0.013), resolution=(2400, 1080), rgb=True)
+                    },
+                    {
+                        'name': 'gt-6',
+                        'template': Template(r"./img/missions/gt-6.png", record_pos=(0.203, -0.061), resolution=(2400, 1080), rgb=True)
+                    },
+                ]
+            }
+        ]
     }
 ]
 
@@ -874,4 +910,7 @@ def runTest(start=False):
 # ======刷图流程=======
 # 例如
 # run([["7-16", 0],["ce-5", 0],["pr-b-2", 0]])
+runTest('gt-1')
 # ===================
+
+
