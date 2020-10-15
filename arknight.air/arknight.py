@@ -599,6 +599,30 @@ series = [
                 ]
             }
         ]
+    },
+    {
+        'name': '玛利亚临光',
+        'template': Template(r"./img/series/maliya.png", record_pos=(0.025, 0.181), resolution=(2400, 1080)),
+        'chapters': [
+            {
+                'name': 'mn',
+                'template': Template(r"./img/chapters/mn.png", record_pos=(0.352, 0.047), resolution=(2400, 1080), rgb=True, threshold=0.8),
+                'missions': [
+                    {
+                        'name': 'mn-6',
+                        'template': Template(r"./img/missions/mn-6.png", record_pos=(-0.143, -0.037), resolution=(2400, 1080), rgb=True)
+                    },
+                    {
+                        'name': 'mn-7',
+                        'template': Template(r"./img/missions/mn-7.png", record_pos=(-0.166, -0.14), resolution=(2400, 1080), rgb=True)
+                    },
+                    {
+                        'name': 'mn-8',
+                        'template': Template(r"./img/missions/mn-8.png", record_pos=(0.148, -0.062), resolution=(2400, 1080), rgb=True)
+                    },
+                ]
+            }
+        ]
     }
 ]
 
@@ -909,8 +933,5 @@ def runTest(start=False):
 
 # ======刷图流程=======
 # 例如
-# run([["7-16", 0],["ce-5", 0],["pr-b-2", 0]])
-runTest('gt-1')
+# run([["3-4", 4],["5-10", 7],["2-5", 10]])
 # ===================
-
-
