@@ -176,6 +176,10 @@ series = [
                         'name': 's3-6',
                         'template': Template(r"./img/missions/s3-6.png", record_pos=(0.018, 0.041), resolution=(2340, 1080), rgb=True)
                     },
+                    {
+                        'name': 's3-7',
+                        'template': Template(r"./img/missions/s3-7.png", record_pos=(0.266, 0.036), resolution=(2400, 1080), rgb=True)
+                    },
                 ]
             },
             {
@@ -268,6 +272,10 @@ series = [
                         'name': '5-10',
                         'template': Template(r"./img/missions/5-10.png", record_pos=(0.035, -0.011), resolution=(2340, 1080), rgb=True)
                     },
+                    {
+                        'name': 's5-9',
+                        'template': Template(r"./img/missions/s5-9.png", record_pos=(0.069, 0.068), resolution=(2400, 1080), rgb=True)
+                    },
                 ]
             },
             {
@@ -343,6 +351,76 @@ series = [
                     {
                         'name': '7-18',
                         'template':Template(r"./img/missions/7-18.png", record_pos=(-0.244, -0.01), resolution=(2340, 1080), rgb=True)
+                    },
+                ]
+            },
+            {
+                'name': '8',
+                'template': Template(r"./img/chapters/chapter8.png", record_pos=(0.296, 0.01), resolution=(2400, 1080)),
+                'missions': [
+                    {
+                        'name': 'r8-1',
+                        'template': Template(r"./img/missions/r8-1.png", record_pos=(-0.114, -0.075), resolution=(2400, 1080))
+                    },
+                    {
+                        'name': 'r8-2',
+                        'template': Template(r"./img/missions/r8-2.png", record_pos=(0.086, -0.076), resolution=(2400, 1080))
+                    },
+                    {
+                        'name': 'r8-3',
+                        'template': Template(r"./img/missions/r8-3.png", record_pos=(-0.452, -0.076), resolution=(2400, 1080))
+                    },
+                    {
+                        'name': 'r8-4',
+                        'template': Template(r"./img/missions/r8-4.png", record_pos=(-0.288, -0.076), resolution=(2400, 1080))
+                    },
+                    {
+                        'name': 'r8-5',
+                        'template': Template(r"./img/missions/r8-5.png", record_pos=(-0.129, -0.077), resolution=(2400, 1080))
+                    },
+                    {
+                        'name': 'r8-6',
+                        'template': Template(r"./img/missions/r8-6.png", record_pos=(0.034, -0.077), resolution=(2400, 1080))
+                    },
+                    {
+                        'name': 'r8-7',
+                        'template': Template(r"./img/missions/r8-7.png", record_pos=(0.109, -0.125), resolution=(2400, 1080))
+                    },
+                    {
+                        'name': 'r8-8',
+                        'template': Template(r"./img/missions/r8-8.png", record_pos=(-0.311, -0.077), resolution=(2400, 1080))
+                    },
+                    {
+                        'name': 'm8-6',
+                        'template': Template(r"./img/missions/m8-6.png", record_pos=(-0.317, 0.066), resolution=(2400, 1080))
+                    },
+                    {
+                        'name': 'r8-9',
+                        'template': Template(r"./img/missions/r8-9.png", record_pos=(-0.106, -0.076), resolution=(2400, 1080))
+                    },
+                    {
+                        'name': 'm8-7',
+                        'template': Template(r"./img/missions/m8-7.png", record_pos=(-0.11, 0.066), resolution=(2400, 1080))
+                    },
+                    {
+                        'name': 'r8-10',
+                        'template': Template(r"./img/missions/r8-10.png", record_pos=(0.025, -0.075), resolution=(2400, 1080))
+                    },
+                    {
+                        'name': 'r8-11',
+                        'template': Template(r"./img/missions/r8-11.png", record_pos=(0.158, -0.077), resolution=(2400, 1080))
+                    },
+                    {
+                        'name': 'm8-8',
+                        'template': Template(r"./img/missions/m8-8.png", record_pos=(0.157, 0.066), resolution=(2400, 1080))
+                    },
+                    {
+                        'name': 'jt8-2',
+                        'template': Template(r"./img/missions/jt8-2.png", record_pos=(0.092, -0.004), resolution=(2400, 1080))
+                    },
+                    {
+                        'name': 'jt8-3',
+                        'template': Template(r"./img/missions/jt8-3.png", record_pos=(-0.001, -0.005), resolution=(2400, 1080))
                     },
                 ]
             },
@@ -933,5 +1011,8 @@ def runTest(start=False):
 
 # ======刷图流程=======
 # 例如
-# run([["3-4", 4],["5-10", 7],["2-5", 10]])
+# run([["7-16", 0],["ce-5", 0],["pr-b-2", 0]])
+runTest('r8-1')
 # ===================
+
+
