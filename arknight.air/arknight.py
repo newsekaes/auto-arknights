@@ -30,10 +30,10 @@ max_rock_num = -1
 MIN_MISSION_TIME = 60
 
 # 开启升级检测功能，True开启，False关闭。关闭此检测后，关卡结束会更快，满级大佬必备
-LEVEL_UP_CHECK = True
+LEVEL_UP_CHECK = False
 
 # 开启代理失败检测，True开启，False关闭。如果对自己的代理有信心，关闭即可
-PROXY_ERROR_CHECK = True
+PROXY_ERROR_CHECK = False
 
 # 开启凌晨4点跨夜模式，True开启，False关闭。此功能尚未完全测试完成，不建议使用（不建议熬夜玩游戏伤身体）
 ACROSS_NIGHT = False
@@ -701,6 +701,30 @@ series = [
                 ]
             }
         ]
+    },
+    {
+        'name': '孤岛风云',
+        'template': Template(r"./img/series/gudaofengyun.png", record_pos=(0.157, 0.225), resolution=(1920, 1081)),
+        'chapters': [
+            {
+                'name': 'mb',
+                'template': Template(r"./img/chapters/mb.png", record_pos=(0.321, -0.142), resolution=(1920, 1081)),
+                'missions': [
+                    {
+                        'name': 'mb-6',
+                        'template': Template(r"./img/missions/mb-6.png", record_pos=(0.172, 0.028), resolution=(1920, 1081))
+                    },
+                    {
+                        'name': 'mb-7',
+                        'template': Template(r"./img/missions/mb-7.png", record_pos=(0.173, 0.129), resolution=(1920, 1081))
+                    },
+                    {
+                        'name': 'mb-8',
+                        'template': Template(r"./img/missions/mb-8.png", record_pos=(0.402, 0.129), resolution=(1920, 1081))
+                    },
+                ]
+            }
+        ]
     }
 ]
 
@@ -1014,5 +1038,4 @@ def runTest(start=False):
 # run([["7-16", 0],["ce-5", 0],["pr-b-2", 0]])
 runTest('r8-1')
 # ===================
-
 
