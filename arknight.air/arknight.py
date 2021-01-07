@@ -725,6 +725,30 @@ series = [
                 ]
             }
         ]
+    },
+    {
+        'name': '此地之外',
+        'template': Template(r"./img/series/cidizhiwai.png", record_pos=(0.025, 0.181), resolution=(2400, 1080)),
+        'chapters': [
+            {
+                'name': 'bh',
+                'template': Template(r"./img/chapters/bh.png", record_pos=(0.238, 0.126), resolution=(2400, 1080), rgb=True, threshold=0.8),
+                'missions': [
+                    {
+                        'name': 'bh-6',
+                        'template': Template(r"./img/missions/bh-6.png", record_pos=(0.131, 0.058), resolution=(2400, 1080))
+                    },
+                    {
+                        'name': 'bh-7',
+                        'template': Template(r"./img/missions/bh-7.png", record_pos=(0.204, -0.057), resolution=(2400, 1080))
+                    },
+                    {
+                        'name': 'bh-8',
+                        'template': Template(r"./img/missions/bh-8.png", record_pos=(0.301, 0.005), resolution=(2400, 1080))
+                    },
+                ]
+            }
+        ]
     }
 ]
 
@@ -1036,6 +1060,5 @@ def runTest(start=False):
 # ======刷图流程=======
 # 例如
 # run([["7-16", 0],["ce-5", 0],["pr-b-2", 0]])
-runTest('r8-1')
+runTest('bh-6')
 # ===================
-
