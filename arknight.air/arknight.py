@@ -708,19 +708,19 @@ series = [
         'chapters': [
             {
                 'name': 'mb',
-                'template': Template(r"./img/chapters/mb.png", record_pos=(0.321, -0.142), resolution=(1920, 1081)),
+                'template': Template(r"./img/chapters/mb.png", record_pos=(0.321, -0.142), resolution=(1920, 1081), rgb=True, threshold=0.8),
                 'missions': [
                     {
                         'name': 'mb-6',
-                        'template': Template(r"./img/missions/mb-6.png", record_pos=(0.172, 0.028), resolution=(1920, 1081))
+                        'template': Template(r"./img/missions/mb-6.png", record_pos=(0.172, 0.028), resolution=(1920, 1081), rgb=True)
                     },
                     {
                         'name': 'mb-7',
-                        'template': Template(r"./img/missions/mb-7.png", record_pos=(0.173, 0.129), resolution=(1920, 1081))
+                        'template': Template(r"./img/missions/mb-7.png", record_pos=(0.173, 0.129), resolution=(1920, 1081), rgb=True)
                     },
                     {
                         'name': 'mb-8',
-                        'template': Template(r"./img/missions/mb-8.png", record_pos=(0.402, 0.129), resolution=(1920, 1081))
+                        'template': Template(r"./img/missions/mb-8.png", record_pos=(0.402, 0.129), resolution=(1920, 1081), rgb=True)
                     },
                 ]
             }
@@ -736,15 +736,39 @@ series = [
                 'missions': [
                     {
                         'name': 'bh-6',
-                        'template': Template(r"./img/missions/bh-6.png", record_pos=(0.131, 0.058), resolution=(2400, 1080))
+                        'template': Template(r"./img/missions/bh-6.png", record_pos=(0.131, 0.058), resolution=(2400, 1080), rgb=True)
                     },
                     {
                         'name': 'bh-7',
-                        'template': Template(r"./img/missions/bh-7.png", record_pos=(0.204, -0.057), resolution=(2400, 1080))
+                        'template': Template(r"./img/missions/bh-7.png", record_pos=(0.204, -0.057), resolution=(2400, 1080), rgb=True)
                     },
                     {
                         'name': 'bh-8',
-                        'template': Template(r"./img/missions/bh-8.png", record_pos=(0.301, 0.005), resolution=(2400, 1080))
+                        'template': Template(r"./img/missions/bh-8.png", record_pos=(0.301, 0.005), resolution=(2400, 1080), rgb=True)
+                    },
+                ]
+            }
+        ]
+    },
+    {
+        'name': '源石尘行动',
+        'template': Template(r"./img/series/dust.png", record_pos=(0.13, 0.179), resolution=(2400, 1080)),
+        'chapters': [
+            {
+                'name': 'od',
+                'template': Template(r"./img/chapters/od.png", record_pos=(-0.376, -0.032), resolution=(2400, 1080), rgb=True),
+                'missions': [
+                    {
+                        'name': 'od-6',
+                        'template': Template(r"./img/missions/od-6.png", record_pos=(-0.258, 0.077), resolution=(2400, 1080))
+                    },
+                    {
+                        'name': 'od-7',
+                        'template': Template(r"./img/missions/od-7.png", record_pos=(0.035, 0.029), resolution=(2400, 1080))
+                    },
+                    {
+                        'name': 'od-8',
+                        'template': Template(r"./img/missions/od-8.png", record_pos=(0.165, -0.027), resolution=(2400, 1080))
                     },
                 ]
             }
@@ -1059,6 +1083,7 @@ def runTest(start=False):
 
 # ======刷图流程=======
 # 例如
-# run([["7-16", 0],["ce-5", 0],["pr-b-2", 0]])
-runTest('bh-6')
+# run([["1-7", 100]])
+runTest('od-6')
 # ===================
+
