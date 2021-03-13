@@ -74,6 +74,11 @@ currentDeps = 0
 __test__mode = False
 __random__time = 1
 
+#使用的理智药水
+rationalPotion = 0
+#使用的理智源石
+rationalRock = 0
+
 # arknights 关卡数据
 series = [
     {
@@ -916,6 +921,8 @@ def fight(times=1, missionTarget=False, actionStartChange=False):
     global max_rock_num
     global _actionStart
     global _actionStart2
+    global rationalPotion
+    global rationalRock
     _actionStartLocal = _actionStart2 if actionStartChange else _actionStart
     # 本关卡的默认时间为全局配置的时间；重复通关同一关卡后，该时间会被不断优化修正
     minMissionTime = MIN_MISSION_TIME
@@ -941,13 +948,17 @@ def fight(times=1, missionTarget=False, actionStartChange=False):
             # 不需要补充体力
             if (USE_SUPPLY == 'none'):
                 rangeTouchImg(_cancelUse)
+                print('------------------ 体力用尽，结束 --------------------')
                 break
             # 只喝体力药
             elif (USE_SUPPLY == 'potion'):
                 if (exists(_useRock)):
                     rangeTouchImg(_cancelUse)
                     break
-                else: rangeTouchImg(_supply)
+                else:
+                    rangeTouchImg(_supply)
+                    rationalPotion += 1
+                    print('------已使用理智液: ' + str(rationalPotion) + '------')
             # 不仅喝体力药，还要碎石
             else:
                 # 如果是碎石，那么考虑最大碎石头数
@@ -956,6 +967,8 @@ def fight(times=1, missionTarget=False, actionStartChange=False):
                         break
                     max_rock_num -= 1
                 rangeTouchImg(_supply)
+                rationalRock = rationalRock + 1
+                print('------已使用理智源石: ' + str(rationalRock) + '------')
             sleep(rt(3))
             wait(_actionStartLocal)
             rangeTouchImg(_actionStartLocal)
@@ -983,7 +996,7 @@ def fight(times=1, missionTarget=False, actionStartChange=False):
                     sleep(rt(4))
                     minMissionTime = (int(time.time()) - timeStart) - 10
                 touch(rangeTarget([230, 230], 30))
-                print(''.join(['已刷:', str(num), "次; 剩余：", str(times), '次']))
+                print(''.join(['已刷:', str(num), "次; 剩余：", str(times), '次; 时间：', str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))]))
                 sysTimeEnd = (int(time.strftime("%H", time.localtime())))
                 break
             # 如果代理失误了
@@ -1083,7 +1096,6 @@ def runTest(start=False):
 
 # ======刷图流程=======
 # 例如
-# run([["1-7", 100]])
-runTest('od-6')
+run([["4-6", 1], ['3-3', 8], ['s5-8', 11], ['s3-6', 1], ['7-10', 3]])
+# runTest('4-6')
 # ===================
-
